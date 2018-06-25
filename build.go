@@ -4,16 +4,16 @@ import "time"
 
 // Build represents a specific build, including version number, repo, branch, revision, labels and manifest
 type Build struct {
-	ID           string    `jsonapi:"primary,builds" json:"id"`
-	RepoSource   string    `jsonapi:"attr,repo-source" json:"repoSource"`
-	RepoOwner    string    `jsonapi:"attr,repo-owner" json:"repoOwner"`
-	RepoName     string    `jsonapi:"attr,repo-name" json:"repoName"`
-	RepoBranch   string    `jsonapi:"attr,repo-branch" json:"repoBranch"`
-	RepoRevision string    `jsonapi:"attr,repo-revision" json:"repoRevision"`
-	BuildVersion string    `jsonapi:"attr,build-version" json:"buildVersion"`
-	BuildStatus  string    `jsonapi:"attr,build-status" json:"buildStatus"`
-	Labels       string    `jsonapi:"attr,labels" json:"labels"`
-	Manifest     string    `jsonapi:"attr,manifest" json:"manifest"`
-	InsertedAt   time.Time `jsonapi:"attr,inserted-at" json:"insertedAt"`
-	UpdatedAt    time.Time `jsonapi:"attr,updated-at" json:"updatedAt"`
+	ID           string    `json:"id"`
+	RepoSource   string    `json:"repoSource"`
+	RepoOwner    string    `json:"repoOwner"`
+	RepoName     string    `json:"repoName"`
+	RepoBranch   string    `json:"repoBranch"`
+	RepoRevision string    `json:"repoRevision"`
+	BuildVersion string    `json:"buildVersion"`
+	BuildStatus  string    `json:"buildStatus"`
+	Labels       string    `json:"labels"`
+	Manifest     string    `json:"manifest"`
+	InsertedAt   time.Time `json:"insertedAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }

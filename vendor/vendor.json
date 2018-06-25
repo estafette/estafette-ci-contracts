@@ -9,14 +9,6 @@
 			"revisionTime": "2018-02-21T22:46:20Z"
 		},
 		{
-			"checksumSHA1": "E7Djn1SNHKdlf/jL7mq+gFyTz38=",
-			"path": "github.com/google/jsonapi",
-			"revision": "46d3ced0434461be12e555852e2f1a9ed382e139",
-			"revisionTime": "2017-07-08T00:58:51Z",
-			"version": "1.0.0",
-			"versionExact": "1.0.0"
-		},
-		{
 			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",
 			"path": "github.com/pmezard/go-difflib/difflib",
 			"revision": "792786c7400a136282c1664665ae0a8db921c6c2",

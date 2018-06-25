@@ -1,17 +1,16 @@
 package contracts
 
 import (
-	"bytes"
+	"encoding/json"
 	"testing"
 	"time"
 
-	"github.com/google/jsonapi"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestBuild(t *testing.T) {
 
-	t.Run("JSONAPIMarshalPayloadSingleBuild", func(t *testing.T) {
+	t.Run("JSONMarshalPayloadSingleBuild", func(t *testing.T) {
 
 		build := Build{
 			ID:           "3",
@@ -28,16 +27,14 @@ func TestBuild(t *testing.T) {
 			UpdatedAt:    time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
 		}
 
-		b := new(bytes.Buffer)
-
 		// act
-		err := jsonapi.MarshalPayload(b, &build)
+		bytes, err := json.Marshal(&build)
 
 		assert.Nil(t, err)
-		assert.Equal(t, "{\"data\":{\"type\":\"builds\",\"id\":\"3\",\"attributes\":{\"build-status\":\"succeeded\",\"build-version\":\"1.0.0\",\"inserted-at\":1523952180,\"labels\":\"\",\"manifest\":\"\",\"repo-branch\":\"master\",\"repo-name\":\"estafette-ci-api\",\"repo-owner\":\"estafette\",\"repo-revision\":\"as23456\",\"repo-source\":\"github.com\",\"updated-at\":1523952900}}}\n", b.String())
+		assert.Equal(t, "{\"id\":\"3\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":\"\",\"manifest\":\"\",\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\"}", string(bytes))
 	})
 
-	t.Run("JSONAPIMarshalPayloadArrayOfBuilds", func(t *testing.T) {
+	t.Run("JSONMarshalPayloadArrayOfBuilds", func(t *testing.T) {
 
 		builds := make([]*Build, 0)
 
@@ -70,12 +67,10 @@ func TestBuild(t *testing.T) {
 			UpdatedAt:    time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
 		})
 
-		b := new(bytes.Buffer)
-
 		// act
-		err := jsonapi.MarshalPayload(b, builds)
+		bytes, err := json.Marshal(&builds)
 
 		assert.Nil(t, err)
-		assert.Equal(t, "{\"data\":[{\"type\":\"builds\",\"id\":\"3\",\"attributes\":{\"build-status\":\"succeeded\",\"build-version\":\"1.0.0\",\"inserted-at\":1523952180,\"labels\":\"\",\"manifest\":\"\",\"repo-branch\":\"master\",\"repo-name\":\"estafette-ci-api\",\"repo-owner\":\"estafette\",\"repo-revision\":\"as23456\",\"repo-source\":\"github.com\",\"updated-at\":1523952900}},{\"type\":\"builds\",\"id\":\"8\",\"attributes\":{\"build-status\":\"succeeded\",\"build-version\":\"1.0.0\",\"inserted-at\":1523952180,\"labels\":\"\",\"manifest\":\"\",\"repo-branch\":\"master\",\"repo-name\":\"estafette-ci-api\",\"repo-owner\":\"estafette\",\"repo-revision\":\"as23456\",\"repo-source\":\"github.com\",\"updated-at\":1523952900}}]}\n", b.String())
+		assert.Equal(t, "[{\"id\":\"3\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":\"\",\"manifest\":\"\",\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\"},{\"id\":\"8\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":\"\",\"manifest\":\"\",\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\"}]", string(bytes))
 	})
 }
