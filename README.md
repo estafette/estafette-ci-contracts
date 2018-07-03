@@ -4,7 +4,7 @@ The `estafette-ci-contracts` library is part of the Estafette CI system document
 
 Please file any issues related to Estafette CI at https://github.com/estafette/estafette-ci-central/issues
 
-## estafette-ci-contracts
+## Estafette-ci-contracts
 
 This library has contracts for requests / responses between various components of the Estafette CI system.
 
