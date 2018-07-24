@@ -22,6 +22,14 @@ pipelines:
     commands:
     - go test -v `go list ./... | grep -v /vendor/`
 
+  protoc:
+    image: golang:1.10.2-alpine3.7
+    commands:
+    - apk add --upgrade --update-cache curl
+    - curl -fSL "https://github.com/google/protobuf/releases/download/v3.6.0/protoc-3.6.0-linux-x86_64.zip" -o /tmp/protoc.zip
+    - unzip /tmp/protoc.zip -d /
+    - /protoc ./*.proto
+
   tag-revision:
     image: golang:1.10.2-alpine3.7
     commands:
