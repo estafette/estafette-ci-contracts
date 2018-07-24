@@ -28,8 +28,10 @@ pipelines:
     - apk add --upgrade --update-cache curl
     - curl -fSL "https://github.com/google/protobuf/releases/download/v3.6.0/protoc-3.6.0-linux-x86_64.zip" -o /tmp/protoc.zip
     - unzip /tmp/protoc.zip -d /tmp/
-    - ls -latr /tmp
-    - /tmp/protoc ./*.proto
+    - ls -latr /tmp/bin
+    - cp /tmp/bin/protoc /usr/local/bin/protoc
+    - chmod +x /usr/local/bin/protoc
+    - protoc ./*.proto
 
   tag-revision:
     image: golang:1.10.2-alpine3.7
