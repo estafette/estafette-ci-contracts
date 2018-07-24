@@ -31,7 +31,9 @@ pipelines:
     - ls -latr /tmp/bin
     - cp /tmp/bin/protoc /usr/local/bin/protoc
     - chmod +x /usr/local/bin/protoc
-    - protoc ./*.proto
+    - ls -latr /usr/local/bin/protoc
+    - echo $PATH
+    - /usr/local/bin/protoc ./*.proto
 
   tag-revision:
     image: golang:1.10.2-alpine3.7
