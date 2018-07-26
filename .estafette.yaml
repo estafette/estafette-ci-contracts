@@ -27,6 +27,7 @@ pipelines:
     commands:
     - apk add --upgrade --update-cache protobuf-dev
     - echo $PATH
+    - find -name protoc-gen-go /
     - protoc --go_out=./go *.proto
 
   tag-revision:
