@@ -17,20 +17,20 @@ version:
 
 pipelines:
   build:
-    image: golang:1.10.2-alpine3.7
+    image: golang:1.10.3-alpine3.8
     workDir: /go/src/github.com/estafette/${ESTAFETTE_LABEL_APP}
     commands:
     - go test -v `go list ./... | grep -v /vendor/`
 
   protoc:
-    image: golang:1.10.2-alpine3.7
+    image: golang:1.10.3-alpine3.8
     commands:
-    - apk add --upgrade --update-cache protobuf-dev
+    - apk --no-cache add git protobuf-dev
     - go get -u github.com/golang/protobuf/protoc-gen-go
     - protoc --go_out=. *.proto
 
   tag-revision:
-    image: golang:1.10.2-alpine3.7
+    image: golang:1.10.3-alpine3.8
     commands:
     - apk --no-cache add git
     - git tag ${ESTAFETTE_BUILD_VERSION}
