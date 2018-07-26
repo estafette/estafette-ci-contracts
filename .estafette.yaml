@@ -29,7 +29,7 @@ pipelines:
     - go get -u google.golang.org/grpc
     - go get -u github.com/golang/protobuf/protoc-gen-go
     - protoc --go_out=plugins=grpc:. *.proto
-    - ls -latr .
+    - ls -latr *.pb.go
 
   tag-revision:
     image: golang:1.10.3-alpine3.8
