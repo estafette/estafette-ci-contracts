@@ -24,6 +24,7 @@ pipelines:
 
   protoc:
     image: golang:1.10.3-alpine3.8
+    workDir: /go/src/github.com/estafette/${ESTAFETTE_LABEL_APP}
     commands:
     - apk --no-cache add git protobuf-dev
     - go get -u google.golang.org/grpc
