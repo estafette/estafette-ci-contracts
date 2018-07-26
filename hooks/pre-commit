@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# remove all current pb.go files
+rm -f *.pb.go
+
+# create grpc files for golang
+protoc --go_out=plugins=grpc:. *.proto
+
+# add (or delete) all pb.go files
+git add *.pb.go -A
+
+git status
