@@ -25,7 +25,8 @@ pipelines:
   protoc:
     image: golang:1.10.2-alpine3.7
     commands:
-    - apk add --upgrade --update-cache go protobuf-dev
+    - apk add --upgrade --update-cache protobuf-dev
+    - echo $PATH
     - protoc --go_out=./go *.proto
 
   tag-revision:
