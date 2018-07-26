@@ -8,5 +8,3 @@ protoc --go_out=plugins=grpc:. *.proto
 
 # add (or delete) all pb.go files
 git add *.pb.go -A
-
-git status
