@@ -26,9 +26,8 @@ pipelines:
     image: golang:1.10.2-alpine3.7
     commands:
     - apk add --upgrade --update-cache protobuf-dev
-    - echo $PATH
-    - find -name protoc-gen-go /
-    - protoc --go_out=./go *.proto
+    - go get -u github.com/golang/protobuf/protoc-gen-go
+    - protoc --go_out=. *.proto
 
   tag-revision:
     image: golang:1.10.2-alpine3.7
