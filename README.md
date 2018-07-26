@@ -15,6 +15,7 @@ To start development run
 ```bash
 git clone git@github.com:estafette/estafette-ci-contracts.git
 cd estafette-ci-contracts
+git config core.hooksPath hooks
 brew install go
 brew install protobuf
 go get -u google.golang.org/grpc
