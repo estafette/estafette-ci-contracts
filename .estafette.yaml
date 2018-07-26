@@ -26,8 +26,9 @@ pipelines:
     image: golang:1.10.3-alpine3.8
     commands:
     - apk --no-cache add git protobuf-dev
+    - go get -u google.golang.org/grpc
     - go get -u github.com/golang/protobuf/protoc-gen-go
-    - protoc --go_out=. *.proto
+    - protoc --go_out=plugins=grpc:. *.proto
     - ls -latr .
 
   tag-revision:
