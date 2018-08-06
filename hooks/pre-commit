@@ -1,12 +1,16 @@
 #!/bin/sh
 
+# create grpc directory if it doesn't exist
+echo "Pre-commit: creating grpc directory"
+mkdir -p grpc
+
 # remove all current pb.go files
 echo "Pre-commit: removing all pb.go files"
-rm -f *.pb.go
+rm -f grpc/*.pb.go
 
 # create grpc files for golang
 echo "Pre-commit: generating pb.go files"
-protoc --go_out=plugins=grpc:. *.proto
+protoc --go_out=plugins=grpc:grpc *.proto
 
 # add (or delete) all pb.go files
 echo "Pre-commit: adding new or modified pb.go files"
