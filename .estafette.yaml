@@ -15,7 +15,7 @@ version:
     labelTemplate: '{{branch}}'
     releaseBranch: master
 
-pipelines:
+stages:
   build:
     image: golang:1.10.3-alpine3.8
     workDir: /go/src/github.com/estafette/${ESTAFETTE_LABEL_APP}
@@ -32,7 +32,7 @@ pipelines:
     - apk --no-cache add git protobuf-dev
     - go get -u google.golang.org/grpc
     - go get -u github.com/golang/protobuf/protoc-gen-go
-    - protoc --go_out=plugins=grpc:. *.proto
+    - protoc --go_out=plugins=grpc:grpc *.proto
     - ls -latr *.pb.go
 
   tag-revision:
