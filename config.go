@@ -23,9 +23,9 @@ type BuilderConfig struct {
 	JobName     *string `json:"jobName,omitempty"`
 	ReleaseName *string `json:"releaseName,omitempty"`
 
-	CIServer    *CIServerConfig      `json:"ciServer,omitempty"`
-	BuildAction *BuildActionConfig   `json:"buildAction,omitempty"`
-	Release     *ReleaseActionConfig `json:"releaseAction,omitempty"`
+	CIServer      *CIServerConfig      `json:"ciServer,omitempty"`
+	BuildParams   *BuildParamsConfig   `json:"buildParams,omitempty"`
+	ReleaseParams *ReleaseParamsConfig `json:"releaseParams,omitempty"`
 
 	Git           *GitConfig            `json:"git,omitempty"`
 	BuildVersion  *BuildVersionConfig   `json:"buildVersion,omitempty"`
@@ -74,13 +74,13 @@ type CIServerConfig struct {
 	APIKey           string `json:"apiKey"`
 }
 
-// BuildActionConfig has config specific to builds
-type BuildActionConfig struct {
+// BuildParamsConfig has config specific to builds
+type BuildParamsConfig struct {
 	BuildID int `json:"buildID"`
 }
 
-// ReleaseActionConfig has config specific to releases
-type ReleaseActionConfig struct {
+// ReleaseParamsConfig has config specific to releases
+type ReleaseParamsConfig struct {
 	ReleaseName string `json:"releaseName"`
 	ReleaseID   int    `json:"releaseID"`
 }
