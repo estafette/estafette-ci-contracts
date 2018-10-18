@@ -2,6 +2,13 @@ package contracts
 
 import "strings"
 
+// ContainerRepositoryCredentialConfig is used to authenticate for (private) container repositories (will be replaced by CredentialConfig eventually)
+type ContainerRepositoryCredentialConfig struct {
+	Repository string `yaml:"repository"`
+	Username   string `yaml:"username"`
+	Password   string `yaml:"password"`
+}
+
 // BuilderConfig parameterizes a build/release job
 type BuilderConfig struct {
 	Action       *string             `json:"action,omitempty"`
