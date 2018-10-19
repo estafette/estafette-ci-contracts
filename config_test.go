@@ -363,13 +363,15 @@ func TestGetCredentialsForTrustedImage(t *testing.T) {
 		trustedImage := config.GetTrustedImage("extensions/docker")
 
 		// act
-		credentials := config.GetCredentialsForTrustedImage(*trustedImage)
+		credentialMap := config.GetCredentialsForTrustedImage(*trustedImage)
 
-		if assert.Equal(t, 2, len(credentials)) {
-			assert.Equal(t, "container-registry-extensions", credentials[0].Name)
-			assert.Equal(t, "container-registry", credentials[0].Type)
-			assert.Equal(t, "container-registry-estafette", credentials[1].Name)
-			assert.Equal(t, "container-registry", credentials[1].Type)
+		if assert.Equal(t, 1, len(credentialMap)) {
+			if assert.Equal(t, 2, len(credentialMap["container-registry"])) {
+				assert.Equal(t, "container-registry-extensions", credentialMap["container-registry"][0].Name)
+				assert.Equal(t, "container-registry", credentialMap["container-registry"][0].Type)
+				assert.Equal(t, "container-registry-estafette", credentialMap["container-registry"][1].Name)
+				assert.Equal(t, "container-registry", credentialMap["container-registry"][1].Type)
+			}
 		}
 	})
 
@@ -381,13 +383,17 @@ func TestGetCredentialsForTrustedImage(t *testing.T) {
 		trustedImage := config.GetTrustedImage("multiple-git-sources-test")
 
 		// act
-		credentials := config.GetCredentialsForTrustedImage(*trustedImage)
+		credentialMap := config.GetCredentialsForTrustedImage(*trustedImage)
 
-		if assert.Equal(t, 2, len(credentials)) {
-			assert.Equal(t, "bitbucket-api-token", credentials[0].Name)
-			assert.Equal(t, "bitbucket-api-token", credentials[0].Type)
-			assert.Equal(t, "github-api-token", credentials[1].Name)
-			assert.Equal(t, "github-api-token", credentials[1].Type)
+		if assert.Equal(t, 2, len(credentialMap)) {
+			if assert.Equal(t, 1, len(credentialMap["bitbucket-api-token"])) {
+				assert.Equal(t, "bitbucket-api-token", credentialMap["bitbucket-api-token"][0].Name)
+				assert.Equal(t, "bitbucket-api-token", credentialMap["bitbucket-api-token"][0].Type)
+			}
+			if assert.Equal(t, 1, len(credentialMap["github-api-token"])) {
+				assert.Equal(t, "github-api-token", credentialMap["github-api-token"][0].Name)
+				assert.Equal(t, "github-api-token", credentialMap["github-api-token"][0].Type)
+			}
 		}
 	})
 
@@ -399,8 +405,8 @@ func TestGetCredentialsForTrustedImage(t *testing.T) {
 		trustedImage := config.GetTrustedImage("docker")
 
 		// act
-		credentials := config.GetCredentialsForTrustedImage(*trustedImage)
+		credentialMap := config.GetCredentialsForTrustedImage(*trustedImage)
 
-		assert.Equal(t, 0, len(credentials))
+		assert.Equal(t, 0, len(credentialMap))
 	})
 }
