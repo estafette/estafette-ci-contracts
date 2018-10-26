@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"testing"
 
+	manifest "github.com/estafette/estafette-ci-manifest"
 	"github.com/stretchr/testify/assert"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -408,5 +409,215 @@ func TestGetCredentialsForTrustedImage(t *testing.T) {
 		credentialMap := config.GetCredentialsForTrustedImage(*trustedImage)
 
 		assert.Equal(t, 0, len(credentialMap))
+	})
+}
+
+func TestFilterTrustedImages(t *testing.T) {
+
+	t.Run("ReturnsEmptyListIfStagesIsEmpty", func(t *testing.T) {
+
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+			},
+			&TrustedImageConfig{
+				ImagePath: "extensions/docker",
+			},
+		}
+		stages := []*manifest.EstafetteStage{}
+
+		// act
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+
+		assert.Equal(t, 0, len(filteredTrustedImages))
+	})
+
+	t.Run("ReturnsListWithTrustedImagesUsedInStages", func(t *testing.T) {
+
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+			},
+			&TrustedImageConfig{
+				ImagePath: "extensions/docker",
+			},
+		}
+		stages := []*manifest.EstafetteStage{
+			&manifest.EstafetteStage{
+				ContainerImage: "extensions/gke:stable",
+			},
+		}
+
+		// act
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+
+		assert.Equal(t, 1, len(filteredTrustedImages))
+		assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+	})
+
+	t.Run("ReturnsListWithTrustedImagesUsedInStagesDeduplicated", func(t *testing.T) {
+
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+			},
+			&TrustedImageConfig{
+				ImagePath: "extensions/docker",
+			},
+		}
+		stages := []*manifest.EstafetteStage{
+			&manifest.EstafetteStage{
+				ContainerImage: "extensions/gke:stable",
+			},
+			&manifest.EstafetteStage{
+				ContainerImage: "extensions/gke:stable",
+			},
+		}
+
+		// act
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+
+		assert.Equal(t, 1, len(filteredTrustedImages))
+		assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+	})
+}
+
+func TestFilterCredentials(t *testing.T) {
+
+	t.Run("ReturnsEmptyListIfTrustedImagesIsEmpty", func(t *testing.T) {
+
+		credentials := []*CredentialConfig{
+			&CredentialConfig{
+				Name: "gke-a",
+				Type: "kubernetes-engine",
+			},
+			&CredentialConfig{
+				Name: "gke-b",
+				Type: "kubernetes-engine",
+			},
+		}
+		trustedImages := []*TrustedImageConfig{}
+
+		// act
+		filteredCredentials := FilterCredentials(credentials, trustedImages)
+
+		assert.Equal(t, 0, len(filteredCredentials))
+	})
+
+	t.Run("ReturnsEmptyListIfTrustedImagesSpecifyNoCredentials", func(t *testing.T) {
+
+		credentials := []*CredentialConfig{
+			&CredentialConfig{
+				Name: "gke-a",
+				Type: "kubernetes-engine",
+			},
+			&CredentialConfig{
+				Name: "gke-b",
+				Type: "kubernetes-engine",
+			},
+		}
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath:               "extensions/gke",
+				InjectedCredentialTypes: []string{},
+			},
+			&TrustedImageConfig{
+				ImagePath:               "extensions/docker",
+				InjectedCredentialTypes: []string{},
+			},
+		}
+
+		// act
+		filteredCredentials := FilterCredentials(credentials, trustedImages)
+
+		assert.Equal(t, 0, len(filteredCredentials))
+	})
+
+	t.Run("ReturnsListOfTrustedImagesSpecifiedForTrustedImages", func(t *testing.T) {
+
+		credentials := []*CredentialConfig{
+			&CredentialConfig{
+				Name: "gke-a",
+				Type: "kubernetes-engine",
+			},
+			&CredentialConfig{
+				Name: "gke-b",
+				Type: "kubernetes-engine",
+			},
+			&CredentialConfig{
+				Name: "docker-hub",
+				Type: "docker-registry",
+			},
+			&CredentialConfig{
+				Name: "gcr-io",
+				Type: "docker-registry",
+			},
+		}
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+				InjectedCredentialTypes: []string{
+					"kubernetes-engine",
+				},
+			},
+			&TrustedImageConfig{
+				ImagePath:               "extensions/docker",
+				InjectedCredentialTypes: []string{},
+			},
+		}
+
+		// act
+		filteredCredentials := FilterCredentials(credentials, trustedImages)
+
+		assert.Equal(t, 2, len(filteredCredentials))
+		assert.Equal(t, "gke-a", filteredCredentials[0].Name)
+		assert.Equal(t, "kubernetes-engine", filteredCredentials[0].Type)
+		assert.Equal(t, "gke-b", filteredCredentials[1].Name)
+		assert.Equal(t, "kubernetes-engine", filteredCredentials[1].Type)
+	})
+
+	t.Run("ReturnsListOfTrustedImagesSpecifiedForTrustedImagesDeduplicated", func(t *testing.T) {
+
+		credentials := []*CredentialConfig{
+			&CredentialConfig{
+				Name: "gke-a",
+				Type: "kubernetes-engine",
+			},
+			&CredentialConfig{
+				Name: "gke-b",
+				Type: "kubernetes-engine",
+			},
+			&CredentialConfig{
+				Name: "docker-hub",
+				Type: "docker-registry",
+			},
+			&CredentialConfig{
+				Name: "gcr-io",
+				Type: "docker-registry",
+			},
+		}
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+				InjectedCredentialTypes: []string{
+					"kubernetes-engine",
+				},
+			},
+			&TrustedImageConfig{
+				ImagePath: "extensions/docker",
+				InjectedCredentialTypes: []string{
+					"kubernetes-engine",
+				},
+			},
+		}
+
+		// act
+		filteredCredentials := FilterCredentials(credentials, trustedImages)
+
+		assert.Equal(t, 2, len(filteredCredentials))
+		assert.Equal(t, "gke-a", filteredCredentials[0].Name)
+		assert.Equal(t, "kubernetes-engine", filteredCredentials[0].Type)
+		assert.Equal(t, "gke-b", filteredCredentials[1].Name)
+		assert.Equal(t, "kubernetes-engine", filteredCredentials[1].Type)
 	})
 }
