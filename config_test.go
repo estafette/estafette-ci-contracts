@@ -398,6 +398,34 @@ func TestGetCredentialsForTrustedImage(t *testing.T) {
 		}
 	})
 
+	t.Run("ReturnsListOfCredentialsMatchingTypesOfTrustedImageWithMultipleAssociatedCredentialTypesAndNonExistingTypes", func(t *testing.T) {
+
+		bytes, _ := ioutil.ReadFile("config-builder-in-api-test.yaml")
+		var config BuilderConfig
+		yaml.Unmarshal(bytes, &config)
+		trustedImage := &TrustedImageConfig{
+			InjectedCredentialTypes: []string{
+				"bitbucket-api-token",
+				"github-api-token",
+				"gitlab-api-token",
+			},
+		}
+
+		// act
+		credentialMap := config.GetCredentialsForTrustedImage(*trustedImage)
+
+		if assert.Equal(t, 2, len(credentialMap)) {
+			if assert.Equal(t, 1, len(credentialMap["bitbucket-api-token"])) {
+				assert.Equal(t, "bitbucket-api-token", credentialMap["bitbucket-api-token"][0].Name)
+				assert.Equal(t, "bitbucket-api-token", credentialMap["bitbucket-api-token"][0].Type)
+			}
+			if assert.Equal(t, 1, len(credentialMap["github-api-token"])) {
+				assert.Equal(t, "github-api-token", credentialMap["github-api-token"][0].Name)
+				assert.Equal(t, "github-api-token", credentialMap["github-api-token"][0].Type)
+			}
+		}
+	})
+
 	t.Run("ReturnsEmptyListIfNoCredentialsMatchTypesOfTrustedImage", func(t *testing.T) {
 
 		bytes, _ := ioutil.ReadFile("config-builder-in-api-test.yaml")
