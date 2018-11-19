@@ -43,8 +43,10 @@ func (stage *EstafetteStage) UnmarshalYAML(unmarshal func(interface{}) error) (e
 	stage.When = aux.When
 	stage.EnvVars = aux.EnvVars
 	stage.AutoInjected = aux.AutoInjected
-	stage.CustomProperties = aux.CustomProperties
 	stage.Retries = aux.Retries
+
+	// fix for map[interface{}]interface breaking json.marshal - see https://github.com/go-yaml/yaml/issues/139
+	stage.CustomProperties = cleanUpStringMap(aux.CustomProperties)
 
 	// set default property values
 	stage.setDefaults()

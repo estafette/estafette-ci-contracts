@@ -64,6 +64,25 @@ stages:
       - supported1
       - supported2
 
+  test-alpha-version:
+    image: extensions/gke:${ESTAFETTE_BUILD_VERSION}
+    retries: 1
+    credentials: gke-tooling
+    app: gke
+    namespace: estafette
+    visibility: private
+    container:
+      repository: extensions
+      name: gke
+      tag: alpha
+    cpu:
+      request: 100m
+      limit: 100m
+    memory:
+      request: 256Mi
+      limit: 256Mi
+    dryrun: true
+
 # releases are automatically triggered from stages or manually from gui, cli or slack
 releases:
   docker-hub:
@@ -73,8 +92,14 @@ releases:
 
   beta:
     stages:
-      tag-image:
-        image: extensions/tag-container-image:dev
+      tag-container-image: &tagImage
+        image: extensions/docker:stable
+        action: tag
+        container: gke
+        repositories:
+        - extensions
+        tags:
+        - beta
 
   development:
     stages:
@@ -87,6 +112,12 @@ releases:
         image: extensions/deploy-to-kubernetes-engine:beta
 
   production:
+    actions:
+    - name: deploy-canary
+    - name: rollback-canary
+    - name: deploy-stable
+
+    clone: true
     stages:
       deploy:
         image: extensions/deploy-to-kubernetes-engine:stable
@@ -95,3 +126,11 @@ releases:
         image: extensions/create-release-notes-from-changelog:stable
 
   tooling:
+
+  stable:
+    stages:
+      tag-container-image:
+        << : *tagImage
+        tags:
+        - stable
+        - latest
