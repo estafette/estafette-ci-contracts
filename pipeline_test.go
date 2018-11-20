@@ -35,8 +35,8 @@ func TestPipeline(t *testing.T) {
 					Value: "golang",
 				},
 			},
-			Releases: []Release{
-				Release{
+			ReleaseTargets: []ReleaseTarget{
+				ReleaseTarget{
 					Name: "tooling",
 				},
 			},
@@ -59,7 +59,7 @@ func TestPipeline(t *testing.T) {
 		bytes, err := json.Marshal(&pipeline)
 
 		assert.Nil(t, err)
-		assert.Equal(t, "{\"id\":\"5\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"releases\":[{\"name\":\"tooling\"}],\"commits\":[{\"message\":\"First commit\",\"author\":{\"email\":\"name@server.com\",\"name\":\"Name\",\"username\":\"MyName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0}", string(bytes))
+		assert.Equal(t, "{\"id\":\"5\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"releaseTargets\":[{\"name\":\"tooling\"}],\"commits\":[{\"message\":\"First commit\",\"author\":{\"email\":\"name@server.com\",\"name\":\"Name\",\"username\":\"MyName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0}", string(bytes))
 	})
 
 	t.Run("JSONMarshalPayloadArrayOfPipelines", func(t *testing.T) {
