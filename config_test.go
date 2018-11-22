@@ -5,9 +5,9 @@ import (
 	"io/ioutil"
 	"testing"
 
-	yaml "github.com/buildkite/yaml"
 	manifest "github.com/estafette/estafette-ci-manifest"
 	"github.com/stretchr/testify/assert"
+	yaml "gopkg.in/yaml.v2"
 )
 
 func TestUnmarshalBuilderConfigFromYaml(t *testing.T) {
