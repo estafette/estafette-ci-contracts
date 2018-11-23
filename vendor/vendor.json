@@ -9,12 +9,12 @@
 			"revisionTime": "2018-02-21T22:46:20Z"
 		},
 		{
-			"checksumSHA1": "6IH15KR+vNiQDy6r/IGAy/O/Sbo=",
+			"checksumSHA1": "c8Ls+R+N65jquPKINE+x9RykeXA=",
 			"path": "github.com/estafette/estafette-ci-manifest",
-			"revision": "d3f54c85b0b9809640464887399bcec399c329df",
-			"revisionTime": "2018-11-22T16:13:42Z",
-			"version": "0.1.46",
-			"versionExact": "0.1.46"
+			"revision": "0fd75ecc7b150e626ca5bea1e1a0e06bd5696188",
+			"revisionTime": "2018-11-23T08:21:28Z",
+			"version": "0.1.47",
+			"versionExact": "0.1.47"
 		},
 		{
 			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",
