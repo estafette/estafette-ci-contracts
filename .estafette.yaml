@@ -39,7 +39,7 @@ stages:
   #   - ls -latr grpc/*.pb.go
 
   tag-revision:
-    image: golang:1.11.2-alpine3.8
+    image: golang:1.11.5-alpine3.8
     commands:
     - apk --no-cache add git
     - git tag ${ESTAFETTE_BUILD_VERSION}
