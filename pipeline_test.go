@@ -51,15 +51,16 @@ func TestPipeline(t *testing.T) {
 					},
 				},
 			},
-			InsertedAt: time.Date(2018, 4, 17, 8, 3, 0, 0, time.UTC),
-			UpdatedAt:  time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
+			InsertedAt:    time.Date(2018, 4, 17, 8, 3, 0, 0, time.UTC),
+			UpdatedAt:     time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
+			LastUpdatedAt: time.Date(2018, 4, 17, 9, 15, 0, 0, time.UTC),
 		}
 
 		// act
 		bytes, err := json.Marshal(&pipeline)
 
 		assert.Nil(t, err)
-		assert.Equal(t, "{\"id\":\"5\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"releaseTargets\":[{\"name\":\"tooling\"}],\"commits\":[{\"message\":\"First commit\",\"author\":{\"email\":\"name@server.com\",\"name\":\"Name\",\"username\":\"MyName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0}", string(bytes))
+		assert.Equal(t, "{\"id\":\"5\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"releaseTargets\":[{\"name\":\"tooling\"}],\"commits\":[{\"message\":\"First commit\",\"author\":{\"email\":\"name@server.com\",\"name\":\"Name\",\"username\":\"MyName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0,\"lastUpdatedAt\":\"2018-04-17T09:15:00Z\"}", string(bytes))
 	})
 
 	t.Run("JSONMarshalPayloadArrayOfPipelines", func(t *testing.T) {
@@ -100,8 +101,9 @@ func TestPipeline(t *testing.T) {
 					},
 				},
 			},
-			InsertedAt: time.Date(2018, 4, 17, 8, 3, 0, 0, time.UTC),
-			UpdatedAt:  time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
+			InsertedAt:    time.Date(2018, 4, 17, 8, 3, 0, 0, time.UTC),
+			UpdatedAt:     time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
+			LastUpdatedAt: time.Date(2018, 4, 17, 9, 15, 0, 0, time.UTC),
 		})
 		pipelines = append(pipelines, &Pipeline{
 			ID:           "6",
@@ -137,14 +139,15 @@ func TestPipeline(t *testing.T) {
 					},
 				},
 			},
-			InsertedAt: time.Date(2018, 4, 17, 8, 3, 0, 0, time.UTC),
-			UpdatedAt:  time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
+			InsertedAt:    time.Date(2018, 4, 17, 8, 3, 0, 0, time.UTC),
+			UpdatedAt:     time.Date(2018, 4, 17, 8, 15, 0, 0, time.UTC),
+			LastUpdatedAt: time.Date(2018, 4, 17, 9, 15, 0, 0, time.UTC),
 		})
 
 		// act
 		bytes, err := json.Marshal(&pipelines)
 
 		assert.Nil(t, err)
-		assert.Equal(t, "[{\"id\":\"5\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"commits\":[{\"message\":\"First commit\",\"author\":{\"email\":\"name@server.com\",\"name\":\"Name\",\"username\":\"MyName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0},{\"id\":\"6\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"commits\":[{\"message\":\"Second commit\",\"author\":{\"email\":\"othername@server.com\",\"name\":\"Other Name\",\"username\":\"OtherName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0}]", string(bytes))
+		assert.Equal(t, "[{\"id\":\"5\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"commits\":[{\"message\":\"First commit\",\"author\":{\"email\":\"name@server.com\",\"name\":\"Name\",\"username\":\"MyName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0,\"lastUpdatedAt\":\"2018-04-17T09:15:00Z\"},{\"id\":\"6\",\"repoSource\":\"github.com\",\"repoOwner\":\"estafette\",\"repoName\":\"estafette-ci-api\",\"repoBranch\":\"master\",\"repoRevision\":\"as23456\",\"buildVersion\":\"1.0.0\",\"buildStatus\":\"succeeded\",\"labels\":[{\"key\":\"app\",\"value\":\"estafette-ci-api\"},{\"key\":\"team\",\"value\":\"estafette-team\"},{\"key\":\"language\",\"value\":\"golang\"}],\"commits\":[{\"message\":\"Second commit\",\"author\":{\"email\":\"othername@server.com\",\"name\":\"Other Name\",\"username\":\"OtherName\"}}],\"insertedAt\":\"2018-04-17T08:03:00Z\",\"updatedAt\":\"2018-04-17T08:15:00Z\",\"duration\":0,\"lastUpdatedAt\":\"2018-04-17T09:15:00Z\"}]", string(bytes))
 	})
 }
