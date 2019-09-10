@@ -20,7 +20,6 @@ cd estafette-ci-contracts
 Before committing your changes run
 
 ```bash
-go test
+go test ./...
 go mod tidy
-go mod vendor
 ```
