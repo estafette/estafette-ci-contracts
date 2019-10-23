@@ -479,8 +479,37 @@ func TestFilterTrustedImages(t *testing.T) {
 		// act
 		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
 
-		assert.Equal(t, 1, len(filteredTrustedImages))
-		assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+		if assert.Equal(t, 1, len(filteredTrustedImages)) {
+			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+		}
+	})
+
+	t.Run("ReturnsListWithTrustedImagesUsedInNestedStages", func(t *testing.T) {
+
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+			},
+			&TrustedImageConfig{
+				ImagePath: "extensions/docker",
+			},
+		}
+		stages := []*manifest.EstafetteStage{
+			&manifest.EstafetteStage{
+				ParallelStages: []*manifest.EstafetteStage{
+					&manifest.EstafetteStage{
+						ContainerImage: "extensions/gke:stable",
+					},
+				},
+			},
+		}
+
+		// act
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+
+		if assert.Equal(t, 1, len(filteredTrustedImages)) {
+			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+		}
 	})
 
 	t.Run("ReturnsListWithTrustedImagesUsedInStagesDeduplicated", func(t *testing.T) {
@@ -505,8 +534,43 @@ func TestFilterTrustedImages(t *testing.T) {
 		// act
 		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
 
-		assert.Equal(t, 1, len(filteredTrustedImages))
-		assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+		if assert.Equal(t, 1, len(filteredTrustedImages)) {
+			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+		}
+	})
+
+	t.Run("ReturnsListWithTrustedImagesUsedInStagesAndNestedStagesDeduplicated", func(t *testing.T) {
+
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+			},
+			&TrustedImageConfig{
+				ImagePath: "extensions/docker",
+			},
+		}
+		stages := []*manifest.EstafetteStage{
+			&manifest.EstafetteStage{
+				ContainerImage: "extensions/gke:stable",
+			},
+			&manifest.EstafetteStage{
+				ContainerImage: "extensions/gke:stable",
+			},
+			&manifest.EstafetteStage{
+				ParallelStages: []*manifest.EstafetteStage{
+					&manifest.EstafetteStage{
+						ContainerImage: "extensions/gke:stable",
+					},
+				},
+			},
+		}
+
+		// act
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+
+		if assert.Equal(t, 1, len(filteredTrustedImages)) {
+			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+		}
 	})
 }
 
