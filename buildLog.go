@@ -18,6 +18,7 @@ type BuildLog struct {
 // BuildLogStep represents the logs for a single step of a pipeline
 type BuildLogStep struct {
 	Step         string                   `json:"step"`
+	Depth        int                      `json:"depth,omitempty"`
 	Image        *BuildLogStepDockerImage `json:"image"`
 	RunIndex     int                      `json:"runIndex,omitempty"`
 	Duration     time.Duration            `json:"duration"`
@@ -51,6 +52,7 @@ type BuildLogLine struct {
 type TailLogLine struct {
 	Step         string                   `json:"step"`
 	Depth        int                      `json:"depth,omitempty"`
+	RunIndex     int                      `json:"runIndex,omitempty"`
 	LogLine      *BuildLogLine            `json:"logLine,omitempty"`
 	Image        *BuildLogStepDockerImage `json:"image,omitempty"`
 	Duration     *time.Duration           `json:"duration,omitempty"`
