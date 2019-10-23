@@ -25,6 +25,7 @@ type BuildLogStep struct {
 	ExitCode     int64                    `json:"exitCode"`
 	Status       string                   `json:"status"`
 	AutoInjected bool                     `json:"autoInjected,omitempty"`
+	NestedSteps  []BuildLogStep           `json:"nestedSteps,omitempty"`
 }
 
 // BuildLogStepDockerImage represents info about the docker image used for a step
@@ -49,6 +50,7 @@ type BuildLogLine struct {
 // TailLogLine returns a log line for streaming logs to gui during a build
 type TailLogLine struct {
 	Step         string                   `json:"step"`
+	Nested       bool                     `json:"nested,omitempty"`
 	LogLine      *BuildLogLine            `json:"logLine,omitempty"`
 	Image        *BuildLogStepDockerImage `json:"image,omitempty"`
 	Duration     *time.Duration           `json:"duration,omitempty"`
