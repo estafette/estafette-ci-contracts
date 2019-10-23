@@ -50,7 +50,7 @@ type BuildLogLine struct {
 // TailLogLine returns a log line for streaming logs to gui during a build
 type TailLogLine struct {
 	Step         string                   `json:"step"`
-	Nested       bool                     `json:"nested,omitempty"`
+	Depth        int                      `json:"depth,omitempty"`
 	LogLine      *BuildLogLine            `json:"logLine,omitempty"`
 	Image        *BuildLogStepDockerImage `json:"image,omitempty"`
 	Duration     *time.Duration           `json:"duration,omitempty"`
