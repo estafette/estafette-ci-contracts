@@ -51,6 +51,8 @@ type BuildLogLine struct {
 // TailLogLine returns a log line for streaming logs to gui during a build
 type TailLogLine struct {
 	Step         string                   `json:"step"`
+	ParentStage  string                   `json:"parentStage,omitempty"`
+	Type         string                   `json:"type"`
 	Depth        int                      `json:"depth,omitempty"`
 	RunIndex     int                      `json:"runIndex,omitempty"`
 	LogLine      *BuildLogLine            `json:"logLine,omitempty"`
