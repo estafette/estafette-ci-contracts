@@ -207,19 +207,38 @@ func FilterTrustedImages(trustedImages []*TrustedImageConfig, stages []*manifest
 		}
 
 		if len(s.ParallelStages) > 0 {
-			trustedNestedImages := FilterTrustedImages(trustedImages, s.ParallelStages)
-			for _, tni := range trustedNestedImages {
-				if tni != nil {
+			for _, ps := range s.ParallelStages {
+				ti := GetTrustedImage(trustedImages, ps.ContainerImage)
+				if ti != nil {
 					alreadyAdded := false
 					for _, fi := range filteredImages {
-						if fi.ImagePath == tni.ImagePath {
+						if fi.ImagePath == ti.ImagePath {
 							alreadyAdded = true
 							break
 						}
 					}
 
 					if !alreadyAdded {
-						filteredImages = append(filteredImages, tni)
+						filteredImages = append(filteredImages, ti)
+					}
+				}
+			}
+		}
+
+		if len(s.Services) > 0 {
+			for _, svc := range s.Services {
+				ti := GetTrustedImage(trustedImages, svc.ContainerImage)
+				if ti != nil {
+					alreadyAdded := false
+					for _, fi := range filteredImages {
+						if fi.ImagePath == ti.ImagePath {
+							alreadyAdded = true
+							break
+						}
+					}
+
+					if !alreadyAdded {
+						filteredImages = append(filteredImages, ti)
 					}
 				}
 			}

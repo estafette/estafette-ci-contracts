@@ -512,6 +512,37 @@ func TestFilterTrustedImages(t *testing.T) {
 		}
 	})
 
+	t.Run("ReturnsListWithTrustedImagesUsedInServices", func(t *testing.T) {
+
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+			},
+			&TrustedImageConfig{
+				ImagePath: "extensions/docker",
+			},
+			&TrustedImageConfig{
+				ImagePath: "bsycorp/kind",
+			},
+		}
+		stages := []*manifest.EstafetteStage{
+			&manifest.EstafetteStage{
+				Services: []*manifest.EstafetteService{
+					&manifest.EstafetteService{
+						ContainerImage: "bsycorp/kind:latest-1.15",
+					},
+				},
+			},
+		}
+
+		// act
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+
+		if assert.Equal(t, 1, len(filteredTrustedImages)) {
+			assert.Equal(t, "bsycorp/kind", filteredTrustedImages[0].ImagePath)
+		}
+	})
+
 	t.Run("ReturnsListWithTrustedImagesUsedInStagesDeduplicated", func(t *testing.T) {
 
 		trustedImages := []*TrustedImageConfig{

@@ -27,6 +27,7 @@ type BuildLogStep struct {
 	Status       string                   `json:"status"`
 	AutoInjected bool                     `json:"autoInjected,omitempty"`
 	NestedSteps  []BuildLogStep           `json:"nestedSteps,omitempty"`
+	Services     []BuildLogStep           `json:"services,omitempty"`
 }
 
 // BuildLogStepDockerImage represents info about the docker image used for a step
