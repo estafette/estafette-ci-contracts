@@ -15,11 +15,12 @@ type ContainerRepositoryCredentialConfig struct {
 
 // BuilderConfig parameterizes a build/release job
 type BuilderConfig struct {
-	Action          *string `json:"action,omitempty"`
-	Track           *string `json:"track,omitempty"`
-	RegistryMirror  *string `json:"registryMirror,omitempty"`
-	DockerDaemonMTU *string `json:"dindMtu,omitempty"`
-	DockerDaemonBIP *string `json:"dindBip,omitempty"`
+	Action          *string              `json:"action,omitempty"`
+	Track           *string              `json:"track,omitempty"`
+	RegistryMirror  *string              `json:"registryMirror,omitempty"`
+	DockerDaemonMTU *string              `json:"dindMtu,omitempty"`
+	DockerDaemonBIP *string              `json:"dindBip,omitempty"`
+	DockerNetwork   *DockerNetworkConfig `json:"dindNetwork,omitempty"`
 
 	Manifest *manifest.EstafetteManifest `json:"manifest,omitempty"`
 
@@ -103,6 +104,13 @@ type CIServerConfig struct {
 	BuilderEventsURL string `json:"builderEventsUrl"`
 	PostLogsURL      string `json:"postLogsUrl"`
 	APIKey           string `json:"apiKey"`
+}
+
+// DockerNetworkConfig has settings for creating a user defined docker network to make service containers accessible by name from other containers
+type DockerNetworkConfig struct {
+	Name    string `json:"name"`
+	Subnet  string `json:"subnet"`
+	Gateway string `json:"gateway"`
 }
 
 // BuildParamsConfig has config specific to builds
