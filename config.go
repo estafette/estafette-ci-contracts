@@ -19,6 +19,7 @@ type BuilderConfig struct {
 	Track           *string `json:"track,omitempty"`
 	RegistryMirror  *string `json:"registryMirror,omitempty"`
 	DockerDaemonMTU *string `json:"dindMtu,omitempty"`
+	DockerDaemonBIP *string `json:"dindBip,omitempty"`
 
 	Manifest *manifest.EstafetteManifest `json:"manifest,omitempty"`
 
