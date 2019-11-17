@@ -1,6 +1,8 @@
 package contracts
 
 import (
+	"fmt"
+	"regexp"
 	"strings"
 
 	manifest "github.com/estafette/estafette-ci-manifest"
@@ -41,9 +43,11 @@ type BuilderConfig struct {
 // CredentialConfig is used to store credentials for every type of authenticated service you can use from docker registries, to kubernetes engine to, github apis, bitbucket;
 // in combination with trusted images access to these centrally stored credentials can be limited
 type CredentialConfig struct {
-	Name                 string                 `yaml:"name" json:"name"`
-	Type                 string                 `yaml:"type" json:"type"`
-	AdditionalProperties map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
+	Name                     string                 `yaml:"name" json:"name"`
+	Type                     string                 `yaml:"type" json:"type"`
+	WhitelistedPipelines     string                 `yaml:"whitelistedPipelines,omitempty" json:"whitelistedPipelines,omitempty"`
+	WhitelistedTrustedImages string                 `yaml:"whitelistedTrustedImages,omitempty" json:"whitelistedTrustedImages,omitempty"`
+	AdditionalProperties     map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
 }
 
 // UnmarshalYAML customizes unmarshalling an EstafetteStage
@@ -77,6 +81,7 @@ type TrustedImageConfig struct {
 	RunDocker               bool     `yaml:"runDocker" json:"runDocker"`
 	AllowCommands           bool     `yaml:"allowCommands" json:"allowCommands"`
 	InjectedCredentialTypes []string `yaml:"injectedCredentialTypes,omitempty" json:"injectedCredentialTypes,omitempty"`
+	WhitelistedPipelines    string   `yaml:"whitelistedPipelines,omitempty" json:"whitelistedPipelines,omitempty"`
 }
 
 // GitConfig contains all information for cloning the git repository for building/releasing a specific version
@@ -154,6 +159,32 @@ func GetCredentialsByType(credentials []*CredentialConfig, filterType string) []
 	return filteredCredentials
 }
 
+// FilterCredentialsByTrustedImagesWhitelist returns the list of credentials filtered by the WhitelistedTrustedImages property on the credentials
+func FilterCredentialsByTrustedImagesWhitelist(credentials []*CredentialConfig, trustedImage TrustedImageConfig) (filteredCredentials []*CredentialConfig) {
+
+	filteredCredentials = make([]*CredentialConfig, 0)
+	for _, c := range credentials {
+		if IsWhitelistedTrustedImageForCredential(*c, trustedImage) {
+			filteredCredentials = append(filteredCredentials, c)
+		}
+	}
+
+	return
+}
+
+// IsWhitelistedTrustedImageForCredential returns true if WhitelistedTrustedImages is empty or matches the trusted image Path property
+func IsWhitelistedTrustedImageForCredential(credential CredentialConfig, trustedImage TrustedImageConfig) bool {
+
+	if credential.WhitelistedTrustedImages == "" {
+		return true
+	}
+
+	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.WhitelistedTrustedImages))
+	isMatch, _ := regexp.Match(pattern, []byte(trustedImage.ImagePath))
+
+	return isMatch
+}
+
 // GetCredentialsForTrustedImage returns all credentials of a certain type
 func (c *BuilderConfig) GetCredentialsForTrustedImage(trustedImage TrustedImageConfig) map[string][]*CredentialConfig {
 	return GetCredentialsForTrustedImage(c.Credentials, trustedImage)
@@ -166,6 +197,7 @@ func GetCredentialsForTrustedImage(credentials []*CredentialConfig, trustedImage
 
 	for _, filterType := range trustedImage.InjectedCredentialTypes {
 		credsByType := GetCredentialsByType(credentials, filterType)
+		credsByType = FilterCredentialsByTrustedImagesWhitelist(credsByType, trustedImage)
 		if len(credsByType) > 0 {
 			credentialMap[filterType] = credsByType
 		}
