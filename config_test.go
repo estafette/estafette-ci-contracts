@@ -455,7 +455,7 @@ func TestFilterTrustedImages(t *testing.T) {
 		stages := []*manifest.EstafetteStage{}
 
 		// act
-		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages, "github.com/estafette/estafette-ci-contracts")
 
 		assert.Equal(t, 0, len(filteredTrustedImages))
 	})
@@ -477,7 +477,7 @@ func TestFilterTrustedImages(t *testing.T) {
 		}
 
 		// act
-		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages, "github.com/estafette/estafette-ci-contracts")
 
 		if assert.Equal(t, 1, len(filteredTrustedImages)) {
 			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
@@ -505,7 +505,7 @@ func TestFilterTrustedImages(t *testing.T) {
 		}
 
 		// act
-		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages, "github.com/estafette/estafette-ci-contracts")
 
 		if assert.Equal(t, 1, len(filteredTrustedImages)) {
 			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
@@ -536,7 +536,7 @@ func TestFilterTrustedImages(t *testing.T) {
 		}
 
 		// act
-		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages, "github.com/estafette/estafette-ci-contracts")
 
 		if assert.Equal(t, 1, len(filteredTrustedImages)) {
 			assert.Equal(t, "bsycorp/kind", filteredTrustedImages[0].ImagePath)
@@ -563,7 +563,7 @@ func TestFilterTrustedImages(t *testing.T) {
 		}
 
 		// act
-		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages, "github.com/estafette/estafette-ci-contracts")
 
 		if assert.Equal(t, 1, len(filteredTrustedImages)) {
 			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
@@ -597,7 +597,7 @@ func TestFilterTrustedImages(t *testing.T) {
 		}
 
 		// act
-		filteredTrustedImages := FilterTrustedImages(trustedImages, stages)
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages, "github.com/estafette/estafette-ci-contracts")
 
 		if assert.Equal(t, 1, len(filteredTrustedImages)) {
 			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)

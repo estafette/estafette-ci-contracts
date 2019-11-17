@@ -1,9 +1,10 @@
 package contracts
 
 import (
+	"fmt"
 	"time"
 
-	"github.com/estafette/estafette-ci-manifest"
+	manifest "github.com/estafette/estafette-ci-manifest"
 )
 
 // Pipeline represents a pipeline with the latest build info, including version number, repo, branch, revision, labels and manifest
@@ -28,4 +29,9 @@ type Pipeline struct {
 	Duration             time.Duration               `json:"duration"`
 	LastUpdatedAt        time.Time                   `json:"lastUpdatedAt"`
 	ManifestObject       *manifest.EstafetteManifest `json:"-"`
+}
+
+// GetFullRepoPath returns the full path of the pipeline repository with source, owner and name
+func (pipeline *Pipeline) GetFullRepoPath() string {
+	return fmt.Sprintf("%v/%v/%v", pipeline.RepoSource, pipeline.RepoOwner, pipeline.RepoName)
 }

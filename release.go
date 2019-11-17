@@ -1,6 +1,7 @@
 package contracts
 
 import (
+	"fmt"
 	"time"
 
 	manifest "github.com/estafette/estafette-ci-manifest"
@@ -20,4 +21,9 @@ type Release struct {
 	InsertedAt     *time.Time                `json:"insertedAt,omitempty"`
 	UpdatedAt      *time.Time                `json:"updatedAt,omitempty"`
 	Duration       *time.Duration            `json:"duration,omitempty"`
+}
+
+// GetFullRepoPath returns the full path of the release repository with source, owner and name
+func (release *Release) GetFullRepoPath() string {
+	return fmt.Sprintf("%v/%v/%v", release.RepoSource, release.RepoOwner, release.RepoName)
 }

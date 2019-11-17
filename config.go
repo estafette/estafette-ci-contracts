@@ -185,6 +185,58 @@ func IsWhitelistedTrustedImageForCredential(credential CredentialConfig, trusted
 	return isMatch
 }
 
+// FilterCredentialsByPipelinesWhitelist returns the list of credentials filtered by the WhitelistedTrustedPipelines property on the credentials
+func FilterCredentialsByPipelinesWhitelist(credentials []*CredentialConfig, fullRepositoryPath string) (filteredCredentials []*CredentialConfig) {
+
+	filteredCredentials = make([]*CredentialConfig, 0)
+	for _, c := range credentials {
+		if IsWhitelistedPipelineForCredential(*c, fullRepositoryPath) {
+			filteredCredentials = append(filteredCredentials, c)
+		}
+	}
+
+	return
+}
+
+// IsWhitelistedPipelineForCredential returns true if WhitelistedPipelines is empty or matches the pipelines full path
+func IsWhitelistedPipelineForCredential(credential CredentialConfig, fullRepositoryPath string) bool {
+
+	if credential.WhitelistedPipelines == "" {
+		return true
+	}
+
+	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.WhitelistedPipelines))
+	isMatch, _ := regexp.Match(pattern, []byte(fullRepositoryPath))
+
+	return isMatch
+}
+
+// FilterTrustedImagesByPipelinesWhitelist returns the list of trusted images filtered by the WhitelistedTrustedPipelines property on the trusted images
+func FilterTrustedImagesByPipelinesWhitelist(trustedImages []*TrustedImageConfig, fullRepositoryPath string) (filteredTrustedImages []*TrustedImageConfig) {
+
+	filteredTrustedImages = make([]*TrustedImageConfig, 0)
+	for _, ti := range trustedImages {
+		if IsWhitelistedPipelineForTrustedImage(*ti, fullRepositoryPath) {
+			filteredTrustedImages = append(filteredTrustedImages, ti)
+		}
+	}
+
+	return
+}
+
+// IsWhitelistedPipelineForTrustedImage returns true if WhitelistedPipelines is empty or matches the pipelines full path
+func IsWhitelistedPipelineForTrustedImage(trustedImage TrustedImageConfig, fullRepositoryPath string) bool {
+
+	if trustedImage.WhitelistedPipelines == "" {
+		return true
+	}
+
+	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(trustedImage.WhitelistedPipelines))
+	isMatch, _ := regexp.Match(pattern, []byte(fullRepositoryPath))
+
+	return isMatch
+}
+
 // GetCredentialsForTrustedImage returns all credentials of a certain type
 func (c *BuilderConfig) GetCredentialsForTrustedImage(trustedImage TrustedImageConfig) map[string][]*CredentialConfig {
 	return GetCredentialsForTrustedImage(c.Credentials, trustedImage)
@@ -227,7 +279,7 @@ func GetTrustedImage(trustedImages []*TrustedImageConfig, imagePath string) *Tru
 }
 
 // FilterTrustedImages returns only trusted images used in the stages
-func FilterTrustedImages(trustedImages []*TrustedImageConfig, stages []*manifest.EstafetteStage) []*TrustedImageConfig {
+func FilterTrustedImages(trustedImages []*TrustedImageConfig, stages []*manifest.EstafetteStage, fullRepositoryPath string) []*TrustedImageConfig {
 
 	filteredImages := []*TrustedImageConfig{}
 
@@ -285,6 +337,8 @@ func FilterTrustedImages(trustedImages []*TrustedImageConfig, stages []*manifest
 			}
 		}
 	}
+
+	filteredImages = FilterTrustedImagesByPipelinesWhitelist(filteredImages, fullRepositoryPath)
 
 	return filteredImages
 }

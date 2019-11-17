@@ -1,6 +1,7 @@
 package contracts
 
 import (
+	"fmt"
 	"time"
 
 	manifest "github.com/estafette/estafette-ci-manifest"
@@ -27,4 +28,9 @@ type Build struct {
 	UpdatedAt            time.Time                   `json:"updatedAt"`
 	Duration             time.Duration               `json:"duration"`
 	ManifestObject       *manifest.EstafetteManifest `json:"-"`
+}
+
+// GetFullRepoPath returns the full path of the build repository with source, owner and name
+func (build *Build) GetFullRepoPath() string {
+	return fmt.Sprintf("%v/%v/%v", build.RepoSource, build.RepoOwner, build.RepoName)
 }
