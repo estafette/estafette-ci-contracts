@@ -249,6 +249,7 @@ func GetCredentialsForTrustedImage(credentials []*CredentialConfig, trustedImage
 
 	for _, filterType := range trustedImage.InjectedCredentialTypes {
 		credsByType := GetCredentialsByType(credentials, filterType)
+		// filter by whitelist
 		credsByType = FilterCredentialsByTrustedImagesWhitelist(credsByType, trustedImage)
 		if len(credsByType) > 0 {
 			credentialMap[filterType] = credsByType
@@ -354,12 +355,11 @@ func FilterCredentials(credentials []*CredentialConfig, trustedImages []*Trusted
 
 		// loop all items in credmap and add to filtered credentials if they haven't been already added
 		for _, v := range credMap {
+			// filter by whitelist
+			v = FilterCredentialsByPipelinesWhitelist(v, fullRepositoryPath)
 			filteredCredentials = AddCredentialsIfNotPresent(filteredCredentials, v)
 		}
 	}
-
-	// filter by whiltelist
-	filteredCredentials = FilterCredentialsByPipelinesWhitelist(filteredCredentials, fullRepositoryPath)
 
 	return filteredCredentials
 }

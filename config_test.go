@@ -603,6 +603,35 @@ func TestFilterTrustedImages(t *testing.T) {
 			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
 		}
 	})
+
+	t.Run("ReturnsListWithTrustedImagesWhitelistedForThisPipeline", func(t *testing.T) {
+
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath:            "extensions/gke",
+				WhitelistedPipelines: "github.com/estafette/estafette-ci-contracts",
+			},
+			&TrustedImageConfig{
+				ImagePath:            "extensions/docker",
+				WhitelistedPipelines: "github.com/estafette/estafette-ci-api",
+			},
+		}
+		stages := []*manifest.EstafetteStage{
+			&manifest.EstafetteStage{
+				ContainerImage: "extensions/gke:stable",
+			},
+			&manifest.EstafetteStage{
+				ContainerImage: "extensions/docker:stable",
+			},
+		}
+
+		// act
+		filteredTrustedImages := FilterTrustedImages(trustedImages, stages, "github.com/estafette/estafette-ci-contracts")
+
+		if assert.Equal(t, 1, len(filteredTrustedImages)) {
+			assert.Equal(t, "extensions/gke", filteredTrustedImages[0].ImagePath)
+		}
+	})
 }
 
 func TestFilterCredentials(t *testing.T) {
@@ -656,7 +685,7 @@ func TestFilterCredentials(t *testing.T) {
 		assert.Equal(t, 0, len(filteredCredentials))
 	})
 
-	t.Run("ReturnsListOfTrustedImagesSpecifiedForTrustedImages", func(t *testing.T) {
+	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImages", func(t *testing.T) {
 
 		credentials := []*CredentialConfig{
 			&CredentialConfig{
@@ -699,7 +728,7 @@ func TestFilterCredentials(t *testing.T) {
 		assert.Equal(t, "kubernetes-engine", filteredCredentials[1].Type)
 	})
 
-	t.Run("ReturnsListOfTrustedImagesSpecifiedForTrustedImagesDeduplicated", func(t *testing.T) {
+	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImagesDeduplicated", func(t *testing.T) {
 
 		credentials := []*CredentialConfig{
 			&CredentialConfig{
@@ -742,5 +771,91 @@ func TestFilterCredentials(t *testing.T) {
 		assert.Equal(t, "kubernetes-engine", filteredCredentials[0].Type)
 		assert.Equal(t, "gke-b", filteredCredentials[1].Name)
 		assert.Equal(t, "kubernetes-engine", filteredCredentials[1].Type)
+	})
+
+	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImagesWhitelistedForTrustedImages", func(t *testing.T) {
+
+		credentials := []*CredentialConfig{
+			&CredentialConfig{
+				Name:                     "gke-a",
+				Type:                     "kubernetes-engine",
+				WhitelistedTrustedImages: "extensions/gke",
+			},
+			&CredentialConfig{
+				Name:                     "gke-b",
+				Type:                     "kubernetes-engine",
+				WhitelistedTrustedImages: "extensions/port-forward",
+			},
+			&CredentialConfig{
+				Name: "docker-hub",
+				Type: "docker-registry",
+			},
+			&CredentialConfig{
+				Name: "gcr-io",
+				Type: "docker-registry",
+			},
+		}
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+				InjectedCredentialTypes: []string{
+					"kubernetes-engine",
+				},
+			},
+			&TrustedImageConfig{
+				ImagePath:               "extensions/docker",
+				InjectedCredentialTypes: []string{},
+			},
+		}
+
+		// act
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+
+		assert.Equal(t, 1, len(filteredCredentials))
+		assert.Equal(t, "gke-a", filteredCredentials[0].Name)
+		assert.Equal(t, "kubernetes-engine", filteredCredentials[0].Type)
+	})
+
+	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImagesWhitelistedForPipeline", func(t *testing.T) {
+
+		credentials := []*CredentialConfig{
+			&CredentialConfig{
+				Name:                 "gke-a",
+				Type:                 "kubernetes-engine",
+				WhitelistedPipelines: "github.com/estafette/estafette-ci-api",
+			},
+			&CredentialConfig{
+				Name:                 "gke-b",
+				Type:                 "kubernetes-engine",
+				WhitelistedPipelines: "github.com/estafette/estafette-ci-contracts",
+			},
+			&CredentialConfig{
+				Name: "docker-hub",
+				Type: "docker-registry",
+			},
+			&CredentialConfig{
+				Name: "gcr-io",
+				Type: "docker-registry",
+			},
+		}
+		trustedImages := []*TrustedImageConfig{
+			&TrustedImageConfig{
+				ImagePath: "extensions/gke",
+				InjectedCredentialTypes: []string{
+					"kubernetes-engine",
+				},
+			},
+			&TrustedImageConfig{
+				ImagePath:               "extensions/docker",
+				InjectedCredentialTypes: []string{},
+			},
+		}
+
+		// act
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+
+		assert.Equal(t, 1, len(filteredCredentials))
+		assert.Equal(t, "gke-b", filteredCredentials[0].Name)
+		assert.Equal(t, "kubernetes-engine", filteredCredentials[0].Type)
 	})
 }
