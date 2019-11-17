@@ -338,13 +338,14 @@ func FilterTrustedImages(trustedImages []*TrustedImageConfig, stages []*manifest
 		}
 	}
 
+	// filter by whitelist
 	filteredImages = FilterTrustedImagesByPipelinesWhitelist(filteredImages, fullRepositoryPath)
 
 	return filteredImages
 }
 
 // FilterCredentials returns only credentials used by the trusted images
-func FilterCredentials(credentials []*CredentialConfig, trustedImages []*TrustedImageConfig) []*CredentialConfig {
+func FilterCredentials(credentials []*CredentialConfig, trustedImages []*TrustedImageConfig, fullRepositoryPath string) []*CredentialConfig {
 
 	filteredCredentials := []*CredentialConfig{}
 
@@ -356,6 +357,9 @@ func FilterCredentials(credentials []*CredentialConfig, trustedImages []*Trusted
 			filteredCredentials = AddCredentialsIfNotPresent(filteredCredentials, v)
 		}
 	}
+
+	// filter by whiltelist
+	filteredCredentials = FilterCredentialsByPipelinesWhitelist(filteredCredentials, fullRepositoryPath)
 
 	return filteredCredentials
 }
