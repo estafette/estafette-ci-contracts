@@ -54,9 +54,11 @@ type CredentialConfig struct {
 func (cc *CredentialConfig) UnmarshalYAML(unmarshal func(interface{}) error) (err error) {
 
 	var aux struct {
-		Name                 string                 `yaml:"name" json:"name"`
-		Type                 string                 `yaml:"type" json:"type"`
-		AdditionalProperties map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
+		Name                     string                 `yaml:"name" json:"name"`
+		Type                     string                 `yaml:"type" json:"type"`
+		WhitelistedPipelines     string                 `yaml:"whitelistedPipelines,omitempty" json:"whitelistedPipelines,omitempty"`
+		WhitelistedTrustedImages string                 `yaml:"whitelistedTrustedImages,omitempty" json:"whitelistedTrustedImages,omitempty"`
+		AdditionalProperties     map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
 	}
 
 	// unmarshal to auxiliary type
@@ -67,6 +69,8 @@ func (cc *CredentialConfig) UnmarshalYAML(unmarshal func(interface{}) error) (er
 	// map auxiliary properties
 	cc.Name = aux.Name
 	cc.Type = aux.Type
+	cc.WhitelistedPipelines = aux.WhitelistedPipelines
+	cc.WhitelistedTrustedImages = aux.WhitelistedTrustedImages
 
 	// fix for map[interface{}]interface breaking json.marshal - see https://github.com/go-yaml/yaml/issues/139
 	cc.AdditionalProperties = cleanUpStringMap(aux.AdditionalProperties)

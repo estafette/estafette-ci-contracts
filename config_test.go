@@ -11,7 +11,6 @@ import (
 )
 
 func TestUnmarshalBuilderConfigFromYaml(t *testing.T) {
-
 	t.Run("ReturnsConfigWithoutErrors", func(t *testing.T) {
 
 		bytes, err := ioutil.ReadFile("config-builder-in-api-test.yaml")
