@@ -26,8 +26,8 @@ type BuildLogStep struct {
 	ExitCode     int64                    `json:"exitCode"`
 	Status       string                   `json:"status"`
 	AutoInjected bool                     `json:"autoInjected,omitempty"`
-	NestedSteps  []BuildLogStep           `json:"nestedSteps,omitempty"`
-	Services     []BuildLogStep           `json:"services,omitempty"`
+	NestedSteps  []*BuildLogStep          `json:"nestedSteps,omitempty"`
+	Services     []*BuildLogStep          `json:"services,omitempty"`
 }
 
 // BuildLogStepDockerImage represents info about the docker image used for a step
