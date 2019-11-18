@@ -63,3 +63,29 @@ type TailLogLine struct {
 	Status       *string                  `json:"status,omitempty"`
 	AutoInjected *bool                    `json:"autoInjected,omitempty"`
 }
+
+// GetAggregatedStatus returns the status aggregated across all stages
+func (buildLog *BuildLog) GetAggregatedStatus() string {
+	return GetAggregatedStatus(buildLog.Steps)
+}
+
+// GetAggregatedStatus returns the status aggregated across all stages
+func GetAggregatedStatus(steps []*BuildLogStep) string {
+
+	// aggregate per stage in order to take retries into account
+	statusPerStage := map[string]string{}
+	for _, bls := range steps {
+		// last status for a stage is leading
+		statusPerStage[bls.Step] = bls.Status
+	}
+
+	// if any stage ended in failure, the aggregated status is failed as well
+	aggregatedStatus := "SUCCEEDED"
+	for _, status := range statusPerStage {
+		if status == "FAILED" {
+			aggregatedStatus = "FAILED"
+		}
+	}
+
+	return aggregatedStatus
+}

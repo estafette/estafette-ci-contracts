@@ -12,3 +12,8 @@ type ReleaseLog struct {
 	Steps      []*BuildLogStep `json:"steps"`
 	InsertedAt time.Time       `json:"insertedAt"`
 }
+
+// GetAggregatedStatus returns the status aggregated across all stages
+func (releaseLog *ReleaseLog) GetAggregatedStatus() string {
+	return GetAggregatedStatus(releaseLog.Steps)
+}
