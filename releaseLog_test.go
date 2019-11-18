@@ -16,8 +16,8 @@ func TestReleaseLog(t *testing.T) {
 			RepoOwner:  "estafette",
 			RepoName:   "estafette-ci-api",
 			ReleaseID:  "123445",
-			Steps: []BuildLogStep{
-				BuildLogStep{
+			Steps: []*BuildLogStep{
+				&BuildLogStep{
 					Step: "deploy",
 					Image: &BuildLogStepDockerImage{
 						Name:         "golang",
