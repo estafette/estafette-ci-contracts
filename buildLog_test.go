@@ -17,8 +17,8 @@ func TestBuildLog(t *testing.T) {
 			RepoName:     "estafette-ci-api",
 			RepoBranch:   "master",
 			RepoRevision: "as23456",
-			Steps: []BuildLogStep{
-				BuildLogStep{
+			Steps: []*BuildLogStep{
+				&BuildLogStep{
 					Step: "init",
 					Image: &BuildLogStepDockerImage{
 						Name:         "golang",
