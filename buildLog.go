@@ -89,3 +89,15 @@ func GetAggregatedStatus(steps []*BuildLogStep) string {
 
 	return aggregatedStatus
 }
+
+// HasSucceededStatus returns true if aggregated status is succeeded
+func (buildLog *BuildLog) HasSucceededStatus() bool {
+	return HasSucceededStatus(buildLog.Steps)
+}
+
+// HasSucceededStatus returns true if aggregated status is succeeded
+func HasSucceededStatus(steps []*BuildLogStep) bool {
+	status := GetAggregatedStatus(steps)
+
+	return status == "SUCCEEDED"
+}

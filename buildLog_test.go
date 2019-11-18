@@ -50,6 +50,116 @@ func TestBuildLog(t *testing.T) {
 }
 
 func TestGetAggregatedStatus(t *testing.T) {
+	t.Run("ReturnsTrueIfNoSteps", func(t *testing.T) {
+
+		steps := []*BuildLogStep{}
+
+		// act
+		succeeded := HasSucceededStatus(steps)
+
+		assert.True(t, succeeded)
+	})
+
+	t.Run("ReturnsFalseIfAllStepsFailed", func(t *testing.T) {
+
+		steps := []*BuildLogStep{
+			&BuildLogStep{
+				Step:   "stage-a",
+				Status: "FAILED",
+			},
+			&BuildLogStep{
+				Step:   "stage-b",
+				Status: "FAILED",
+			},
+		}
+
+		// act
+		succeeded := HasSucceededStatus(steps)
+
+		assert.False(t, succeeded)
+	})
+
+	t.Run("ReturnsFalseIfAnyStepsFailed", func(t *testing.T) {
+
+		steps := []*BuildLogStep{
+			&BuildLogStep{
+				Step:   "stage-a",
+				Status: "SUCCEEDED",
+			},
+			&BuildLogStep{
+				Step:   "stage-b",
+				Status: "FAILED",
+			},
+			&BuildLogStep{
+				Step:   "stage-c",
+				Status: "SUCCEEDED",
+			},
+		}
+
+		// act
+		succeeded := HasSucceededStatus(steps)
+
+		assert.False(t, succeeded)
+	})
+
+	t.Run("ReturnsTrueIfAStepFailedButSucceededInRetry", func(t *testing.T) {
+
+		steps := []*BuildLogStep{
+			&BuildLogStep{
+				Step:   "stage-a",
+				Status: "SUCCEEDED",
+			},
+			&BuildLogStep{
+				Step:   "stage-b",
+				Status: "FAILED",
+			},
+			&BuildLogStep{
+				Step:     "stage-b",
+				RunIndex: 1,
+				Status:   "SUCCEEDED",
+			},
+			&BuildLogStep{
+				Step:   "stage-c",
+				Status: "SUCCEEDED",
+			},
+		}
+
+		// act
+		succeeded := HasSucceededStatus(steps)
+
+		assert.True(t, succeeded)
+	})
+
+	t.Run("ReturnsFalseIfAStepFailedButSucceededInRetryButAnotherStepFailed", func(t *testing.T) {
+
+		steps := []*BuildLogStep{
+			&BuildLogStep{
+				Step:   "stage-a",
+				Status: "SUCCEEDED",
+			},
+			&BuildLogStep{
+				Step:   "stage-b",
+				Status: "FAILED",
+			},
+			&BuildLogStep{
+				Step:     "stage-b",
+				RunIndex: 1,
+				Status:   "SUCCEEDED",
+			},
+			&BuildLogStep{
+				Step:   "stage-c",
+				Status: "FAILED",
+			},
+		}
+
+		// act
+		succeeded := HasSucceededStatus(steps)
+
+		assert.False(t, succeeded)
+	})
+}
+
+func TestHasSucceededStatus(t *testing.T) {
 	t.Run("ReturnsSucceededIfNoSteps", func(t *testing.T) {
 
 		steps := []*BuildLogStep{}

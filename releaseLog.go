@@ -17,3 +17,8 @@ type ReleaseLog struct {
 func (releaseLog *ReleaseLog) GetAggregatedStatus() string {
 	return GetAggregatedStatus(releaseLog.Steps)
 }
+
+// HasSucceededStatus returns true if aggregated status is succeeded
+func (releaseLog *ReleaseLog) HasSucceededStatus() bool {
+	return HasSucceededStatus(releaseLog.Steps)
+}
