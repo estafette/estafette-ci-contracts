@@ -1,6 +1,9 @@
 package contracts
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 // BuildLog represents a build log for a specific revision
 type BuildLog struct {
@@ -74,9 +77,15 @@ func GetAggregatedStatus(steps []*BuildLogStep) string {
 
 	// aggregate per stage in order to take retries into account
 	statusPerStage := map[string]string{}
-	for _, bls := range steps {
+	for _, s := range steps {
+		status := strings.ToUpper(s.Status)
+
+		if status == "CANCELED" {
+			return "CANCELED"
+		}
+
 		// last status for a stage is leading
-		statusPerStage[bls.Step] = bls.Status
+		statusPerStage[s.Step] = strings.ToUpper(status)
 	}
 
 	// if any stage ended in failure, the aggregated status is failed as well
