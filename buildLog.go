@@ -80,8 +80,8 @@ func GetAggregatedStatus(steps []*BuildLogStep) string {
 	for _, s := range steps {
 		status := strings.ToUpper(s.Status)
 
-		if status == "CANCELED" {
-			return "CANCELED"
+		if status == StatusCanceled {
+			return StatusCanceled
 		}
 
 		// last status for a stage is leading
@@ -89,10 +89,10 @@ func GetAggregatedStatus(steps []*BuildLogStep) string {
 	}
 
 	// if any stage ended in failure, the aggregated status is failed as well
-	aggregatedStatus := "SUCCEEDED"
+	aggregatedStatus := StatusSucceeded
 	for _, status := range statusPerStage {
-		if status == "FAILED" {
-			aggregatedStatus = "FAILED"
+		if status == StatusFailed {
+			aggregatedStatus = StatusFailed
 		}
 	}
 
@@ -108,7 +108,7 @@ func (buildLog *BuildLog) HasSucceededStatus() bool {
 func HasSucceededStatus(steps []*BuildLogStep) bool {
 	status := GetAggregatedStatus(steps)
 
-	return status == "SUCCEEDED"
+	return status == StatusSucceeded
 }
 
 // HasCanceledStatus returns true if aggregated status is canceled
@@ -120,5 +120,16 @@ func (buildLog *BuildLog) HasCanceledStatus() bool {
 func HasCanceledStatus(steps []*BuildLogStep) bool {
 	status := GetAggregatedStatus(steps)
 
-	return status == "SUCCEEDED"
+	return status == StatusSucceeded
 }
+
+const (
+	// StatusSucceeded indicates execution was successful
+	StatusSucceeded = "SUCCEEDED"
+	// StatusFailed indicates execution was not successful
+	StatusFailed = "FAILED"
+	// StatusSkipped indicates execution was skipped
+	StatusSkipped = "SKIPPED"
+	// StatusCanceled indicates execution was canceled
+	StatusCanceled = "CANCELED"
+)
