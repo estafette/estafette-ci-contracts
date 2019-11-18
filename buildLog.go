@@ -110,3 +110,15 @@ func HasSucceededStatus(steps []*BuildLogStep) bool {
 
 	return status == "SUCCEEDED"
 }
+
+// HasCanceledStatus returns true if aggregated status is canceled
+func (buildLog *BuildLog) HasCanceledStatus() bool {
+	return HasSucceededStatus(buildLog.Steps)
+}
+
+// HasCanceledStatus returns true if aggregated status is canceled
+func HasCanceledStatus(steps []*BuildLogStep) bool {
+	status := GetAggregatedStatus(steps)
+
+	return status == "SUCCEEDED"
+}

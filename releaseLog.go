@@ -22,3 +22,8 @@ func (releaseLog *ReleaseLog) GetAggregatedStatus() string {
 func (releaseLog *ReleaseLog) HasSucceededStatus() bool {
 	return HasSucceededStatus(releaseLog.Steps)
 }
+
+// HasCanceledStatus returns true if aggregated status is canceled
+func (releaseLog *ReleaseLog) HasCanceledStatus() bool {
+	return HasSucceededStatus(releaseLog.Steps)
+}
