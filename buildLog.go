@@ -132,4 +132,6 @@ const (
 	StatusSkipped = "SKIPPED"
 	// StatusCanceled indicates execution was canceled
 	StatusCanceled = "CANCELED"
+	// StatusPending indicates container is pulling
+	StatusPending = "PENDING"
 )
