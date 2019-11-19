@@ -134,4 +134,6 @@ const (
 	StatusCanceled = "CANCELED"
 	// StatusPending indicates container is pulling
 	StatusPending = "PENDING"
+	// StatusRunning indicates container is running
+	StatusRunning = "RUNNING"
 )
