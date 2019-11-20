@@ -136,4 +136,8 @@ const (
 	StatusPending = "PENDING"
 	// StatusRunning indicates container is running
 	StatusRunning = "RUNNING"
+	// TypeStage indicates that a tail message is for a main stage or parallel stage
+	TypeStage = "stage"
+	// TypeService indicates that a tail message is for a service container
+	TypeService = "service"
 )
