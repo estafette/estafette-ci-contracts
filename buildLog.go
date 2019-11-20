@@ -21,6 +21,7 @@ type BuildLog struct {
 // BuildLogStep represents the logs for a single step of a pipeline
 type BuildLogStep struct {
 	Step         string                   `json:"step"`
+	ContainerID  string                   `json:"containerID,omitempty"`
 	Depth        int                      `json:"depth,omitempty"`
 	Image        *BuildLogStepDockerImage `json:"image"`
 	RunIndex     int                      `json:"runIndex,omitempty"`
@@ -54,17 +55,19 @@ type BuildLogLine struct {
 
 // TailLogLine returns a log line for streaming logs to gui during a build
 type TailLogLine struct {
-	Step         string                   `json:"step"`
-	ParentStage  string                   `json:"parentStage,omitempty"`
-	Type         string                   `json:"type"`
-	Depth        int                      `json:"depth,omitempty"`
-	RunIndex     int                      `json:"runIndex,omitempty"`
-	LogLine      *BuildLogLine            `json:"logLine,omitempty"`
-	Image        *BuildLogStepDockerImage `json:"image,omitempty"`
-	Duration     *time.Duration           `json:"duration,omitempty"`
-	ExitCode     *int64                   `json:"exitCode,omitempty"`
-	Status       *string                  `json:"status,omitempty"`
-	AutoInjected *bool                    `json:"autoInjected,omitempty"`
+	Step              string                   `json:"step"`
+	ParentStage       string                   `json:"parentStage,omitempty"`
+	ContainerID       string                   `json:"containerID,omitempty"`
+	ParentContainerID string                   `json:"parentContainerID,omitempty"`
+	Type              string                   `json:"type"`
+	Depth             int                      `json:"depth,omitempty"`
+	RunIndex          int                      `json:"runIndex,omitempty"`
+	LogLine           *BuildLogLine            `json:"logLine,omitempty"`
+	Image             *BuildLogStepDockerImage `json:"image,omitempty"`
+	Duration          *time.Duration           `json:"duration,omitempty"`
+	ExitCode          *int64                   `json:"exitCode,omitempty"`
+	Status            *string                  `json:"status,omitempty"`
+	AutoInjected      *bool                    `json:"autoInjected,omitempty"`
 }
 
 // GetAggregatedStatus returns the status aggregated across all stages
