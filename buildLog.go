@@ -89,14 +89,29 @@ func GetAggregatedStatus(steps []*BuildLogStep) string {
 	}
 
 	// if any stage ended in failure, the aggregated status is failed as well
-	aggregatedStatus := StatusSucceeded
+	aggregatedStatus := StatusUnknown
 	for _, status := range statusPerStage {
+		if status == StatusSucceeded && aggregatedStatus == StatusUnknown {
+			aggregatedStatus = status
+		}
 		if status == StatusFailed {
 			aggregatedStatus = StatusFailed
 		}
 	}
 
 	return aggregatedStatus
+}
+
+// HasUnknownStatus returns true if aggregated status is unknown
+func (buildLog *BuildLog) HasUnknownStatus() bool {
+	return HasUnknownStatus(buildLog.Steps)
+}
+
+// HasUnknownStatus returns true if aggregated status is unknown
+func HasUnknownStatus(steps []*BuildLogStep) bool {
+	status := GetAggregatedStatus(steps)
+
+	return status == StatusUnknown
 }
 
 // HasSucceededStatus returns true if aggregated status is succeeded
@@ -109,6 +124,18 @@ func HasSucceededStatus(steps []*BuildLogStep) bool {
 	status := GetAggregatedStatus(steps)
 
 	return status == StatusSucceeded
+}
+
+// HasFailedStatus returns true if aggregated status is failed
+func (buildLog *BuildLog) HasFailedStatus() bool {
+	return HasFailedStatus(buildLog.Steps)
+}
+
+// HasFailedStatus returns true if aggregated status is failed
+func HasFailedStatus(steps []*BuildLogStep) bool {
+	status := GetAggregatedStatus(steps)
+
+	return status == StatusFailed
 }
 
 // HasCanceledStatus returns true if aggregated status is canceled
@@ -124,6 +151,8 @@ func HasCanceledStatus(steps []*BuildLogStep) bool {
 }
 
 const (
+	// StatusUnknown indicates execution never started for some reason
+	StatusUnknown = "UNKNOWN"
 	// StatusSucceeded indicates execution was successful
 	StatusSucceeded = "SUCCEEDED"
 	// StatusFailed indicates execution was not successful

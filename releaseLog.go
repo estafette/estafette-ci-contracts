@@ -18,9 +18,19 @@ func (releaseLog *ReleaseLog) GetAggregatedStatus() string {
 	return GetAggregatedStatus(releaseLog.Steps)
 }
 
+// HasUnknownStatus returns true if aggregated status is unknown
+func (releaseLog *ReleaseLog) HasUnknownStatus() bool {
+	return HasUnknownStatus(releaseLog.Steps)
+}
+
 // HasSucceededStatus returns true if aggregated status is succeeded
 func (releaseLog *ReleaseLog) HasSucceededStatus() bool {
 	return HasSucceededStatus(releaseLog.Steps)
+}
+
+// HasFailedStatus returns true if aggregated status is failed
+func (releaseLog *ReleaseLog) HasFailedStatus() bool {
+	return HasFailedStatus(releaseLog.Steps)
 }
 
 // HasCanceledStatus returns true if aggregated status is canceled
