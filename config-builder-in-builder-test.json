@@ -1,6 +1,16 @@
 {
   "action": "build",
   "track": "dev",
+  "manifestPreferences": {
+    "labelRegexes":{
+      "type":"api|web|library|container"
+    },
+    "builderOperatingSystems": ["linux","windows"],
+    "builderTracksPerOperatingSystem": {
+      "linux": ["stable", "beta", "dev"],
+      "windows": ["windowsservercore-1809", "windowsservercore-1909", "windowsservercore-ltsc2019"]
+    }
+  },
   "git": {
     "repoSource": "github.com",
     "repoOwner": "estafette",

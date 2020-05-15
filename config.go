@@ -17,25 +17,26 @@ type ContainerRepositoryCredentialConfig struct {
 
 // BuilderConfig parameterizes a build/release job
 type BuilderConfig struct {
-	Action          *string              `json:"action,omitempty"`
-	Track           *string              `json:"track,omitempty"`
-	RegistryMirror  *string              `json:"registryMirror,omitempty"`
-	DockerDaemonMTU *string              `json:"dindMtu,omitempty"`
-	DockerDaemonBIP *string              `json:"dindBip,omitempty"`
-	DockerNetwork   *DockerNetworkConfig `json:"dindNetwork,omitempty"`
+	Action          *string              `yaml:"action,omitempty" json:"action,omitempty"`
+	Track           *string              `yaml:"track,omitempty" json:"track,omitempty"`
+	RegistryMirror  *string              `yaml:"registryMirror,omitempty" json:"registryMirror,omitempty"`
+	DockerDaemonMTU *string              `yaml:"dindMtu,omitempty" json:"dindMtu,omitempty"`
+	DockerDaemonBIP *string              `yaml:"dindBip,omitempty" json:"dindBip,omitempty"`
+	DockerNetwork   *DockerNetworkConfig `yaml:"dindNetwork,omitempty" json:"dindNetwork,omitempty"`
 
-	Manifest *manifest.EstafetteManifest `json:"manifest,omitempty"`
+	Manifest            *manifest.EstafetteManifest            `yaml:"manifest,omitempty" json:"manifest,omitempty"`
+	ManifestPreferences *manifest.EstafetteManifestPreferences `yaml:"manifestPreferences,omitempty" json:"manifestPreferences,omitempty"`
 
-	JobName     *string                    `json:"jobName,omitempty"`
-	ReleaseName *string                    `json:"releaseName,omitempty"`
-	Events      []*manifest.EstafetteEvent `json:"triggerEvents,omitempty"`
+	JobName     *string                    `yaml:"jobName,omitempty" json:"jobName,omitempty"`
+	ReleaseName *string                    `yaml:"releaseName,omitempty" json:"releaseName,omitempty"`
+	Events      []*manifest.EstafetteEvent `yaml:"triggerEvents,omitempty" json:"triggerEvents,omitempty"`
 
-	CIServer      *CIServerConfig      `json:"ciServer,omitempty"`
-	BuildParams   *BuildParamsConfig   `json:"buildParams,omitempty"`
-	ReleaseParams *ReleaseParamsConfig `json:"releaseParams,omitempty"`
+	CIServer      *CIServerConfig      `yaml:"ciServer,omitempty" json:"ciServer,omitempty"`
+	BuildParams   *BuildParamsConfig   `yaml:"buildParams,omitempty" json:"buildParams,omitempty"`
+	ReleaseParams *ReleaseParamsConfig `yaml:"releaseParams,omitempty" json:"releaseParams,omitempty"`
 
-	Git           *GitConfig            `json:"git,omitempty"`
-	BuildVersion  *BuildVersionConfig   `json:"buildVersion,omitempty"`
+	Git           *GitConfig            `yaml:"git,omitempty" json:"git,omitempty"`
+	BuildVersion  *BuildVersionConfig   `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
 	Credentials   []*CredentialConfig   `yaml:"credentials,omitempty" json:"credentials,omitempty"`
 	TrustedImages []*TrustedImageConfig `yaml:"trustedImages,omitempty" json:"trustedImages,omitempty"`
 }

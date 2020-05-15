@@ -110,6 +110,35 @@ func TestUnmarshalBuilderConfigFromYaml(t *testing.T) {
 		assert.Equal(t, 1, len(config.TrustedImages[4].InjectedCredentialTypes))
 		assert.Equal(t, "slack-webhook", config.TrustedImages[4].InjectedCredentialTypes[0])
 	})
+
+	t.Run("ReturnsManifestPreferences", func(t *testing.T) {
+
+		bytes, err := ioutil.ReadFile("config-builder-in-api-test.yaml")
+		if !assert.Nil(t, err) {
+			return
+		}
+		var config BuilderConfig
+
+		// act
+		err = yaml.Unmarshal(bytes, &config)
+
+		if !assert.Nil(t, err) {
+			return
+		}
+
+		if !assert.NotNil(t, config.ManifestPreferences) {
+			return
+		}
+
+		assert.Equal(t, 1, len(config.ManifestPreferences.LabelRegexes))
+		assert.Equal(t, "api|web|library|container", config.ManifestPreferences.LabelRegexes["type"])
+		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderOperatingSystems))
+		assert.Equal(t, "linux", config.ManifestPreferences.BuilderOperatingSystems[0])
+		assert.Equal(t, "windows", config.ManifestPreferences.BuilderOperatingSystems[1])
+		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["linux"]))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["windows"]))
+	})
 }
 
 func TestUnmarshalBuilderConfigFromJson(t *testing.T) {
@@ -262,6 +291,35 @@ func TestUnmarshalBuilderConfigFromJson(t *testing.T) {
 		assert.Equal(t, "67-rc.1", *config.BuildVersion.Patch)
 		assert.Equal(t, 67, *config.BuildVersion.AutoIncrement)
 	})
+
+	t.Run("ReturnsManifestPreferences", func(t *testing.T) {
+
+		bytes, err := ioutil.ReadFile("config-builder-in-builder-test.json")
+		if !assert.Nil(t, err) {
+			return
+		}
+		var config BuilderConfig
+
+		// act
+		err = json.Unmarshal(bytes, &config)
+
+		if !assert.Nil(t, err) {
+			return
+		}
+
+		if !assert.NotNil(t, config.ManifestPreferences) {
+			return
+		}
+
+		assert.Equal(t, 1, len(config.ManifestPreferences.LabelRegexes))
+		assert.Equal(t, "api|web|library|container", config.ManifestPreferences.LabelRegexes["type"])
+		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderOperatingSystems))
+		assert.Equal(t, "linux", config.ManifestPreferences.BuilderOperatingSystems[0])
+		assert.Equal(t, "windows", config.ManifestPreferences.BuilderOperatingSystems[1])
+		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["linux"]))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["windows"]))
+	})
 }
 
 func TestMarshalBuilderConfigToJson(t *testing.T) {
@@ -285,7 +343,7 @@ func TestMarshalBuilderConfigToJson(t *testing.T) {
 			return
 		}
 
-		assert.Equal(t, "{\"credentials\":[{\"name\":\"container-registry-extensions\",\"type\":\"container-registry\",\"additionalProperties\":{\"password\":\"secret\",\"repository\":\"extensions\",\"username\":\"username\"}},{\"name\":\"container-registry-estafette\",\"type\":\"container-registry\",\"additionalProperties\":{\"password\":\"secret\",\"repository\":\"estafette\",\"username\":\"username\"}},{\"name\":\"gke-estafette-production\",\"type\":\"kubernetes-engine\",\"additionalProperties\":{\"cluster\":\"production-europe-west2\",\"defaultNamespace\":\"estafette\",\"project\":\"estafette-production\",\"region\":\"europe-west2\",\"serviceAccountKeyfile\":\"{}\"}},{\"name\":\"gke-estafette-development\",\"type\":\"kubernetes-engine\",\"additionalProperties\":{\"cluster\":\"development-europe-west2\",\"defaultNamespace\":\"estafette\",\"project\":\"estafette-development\",\"region\":\"europe-west2\",\"serviceAccountKeyfile\":\"{}\"}},{\"name\":\"bitbucket-api-token\",\"type\":\"bitbucket-api-token\",\"additionalProperties\":{\"token\":\"sometoken\"}},{\"name\":\"github-api-token\",\"type\":\"github-api-token\",\"additionalProperties\":{\"token\":\"sometoken\"}},{\"name\":\"slack-webhook\",\"type\":\"slack-webhook\",\"additionalProperties\":{\"webhook\":\"somewebhookurl\"}}],\"trustedImages\":[{\"path\":\"extensions/docker\",\"runPrivileged\":false,\"runDocker\":true,\"allowCommands\":false,\"injectedCredentialTypes\":[\"container-registry\"]},{\"path\":\"extensions/gke\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"kubernetes-engine\"]},{\"path\":\"extensions/bitbucket-status\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"bitbucket-api-token\"]},{\"path\":\"extensions/github-status\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"github-api-token\"]},{\"path\":\"extensions/slack-build-status\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"slack-webhook\"]},{\"path\":\"docker\",\"runPrivileged\":false,\"runDocker\":true,\"allowCommands\":false},{\"path\":\"multiple-git-sources-test\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":true,\"injectedCredentialTypes\":[\"bitbucket-api-token\",\"github-api-token\"]},{\"path\":\"estafette/estafette-ci-builder\",\"runPrivileged\":true,\"runDocker\":false,\"allowCommands\":false}]}", string(jsonBytes))
+		assert.Equal(t, "{\"manifestPreferences\":{\"labelRegexes\":{\"type\":\"api|web|library|container\"},\"builderOperatingSystems\":[\"linux\",\"windows\"],\"builderTracksPerOperatingSystem\":{\"linux\":[\"stable\",\"beta\",\"dev\"],\"windows\":[\"windowsservercore-1809\",\"windowsservercore-1909\",\"windowsservercore-ltsc2019\"]}},\"credentials\":[{\"name\":\"container-registry-extensions\",\"type\":\"container-registry\",\"additionalProperties\":{\"password\":\"secret\",\"repository\":\"extensions\",\"username\":\"username\"}},{\"name\":\"container-registry-estafette\",\"type\":\"container-registry\",\"additionalProperties\":{\"password\":\"secret\",\"repository\":\"estafette\",\"username\":\"username\"}},{\"name\":\"gke-estafette-production\",\"type\":\"kubernetes-engine\",\"additionalProperties\":{\"cluster\":\"production-europe-west2\",\"defaultNamespace\":\"estafette\",\"project\":\"estafette-production\",\"region\":\"europe-west2\",\"serviceAccountKeyfile\":\"{}\"}},{\"name\":\"gke-estafette-development\",\"type\":\"kubernetes-engine\",\"additionalProperties\":{\"cluster\":\"development-europe-west2\",\"defaultNamespace\":\"estafette\",\"project\":\"estafette-development\",\"region\":\"europe-west2\",\"serviceAccountKeyfile\":\"{}\"}},{\"name\":\"bitbucket-api-token\",\"type\":\"bitbucket-api-token\",\"additionalProperties\":{\"token\":\"sometoken\"}},{\"name\":\"github-api-token\",\"type\":\"github-api-token\",\"additionalProperties\":{\"token\":\"sometoken\"}},{\"name\":\"slack-webhook\",\"type\":\"slack-webhook\",\"additionalProperties\":{\"webhook\":\"somewebhookurl\"}}],\"trustedImages\":[{\"path\":\"extensions/docker\",\"runPrivileged\":false,\"runDocker\":true,\"allowCommands\":false,\"injectedCredentialTypes\":[\"container-registry\"]},{\"path\":\"extensions/gke\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"kubernetes-engine\"]},{\"path\":\"extensions/bitbucket-status\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"bitbucket-api-token\"]},{\"path\":\"extensions/github-status\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"github-api-token\"]},{\"path\":\"extensions/slack-build-status\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":false,\"injectedCredentialTypes\":[\"slack-webhook\"]},{\"path\":\"docker\",\"runPrivileged\":false,\"runDocker\":true,\"allowCommands\":false},{\"path\":\"multiple-git-sources-test\",\"runPrivileged\":false,\"runDocker\":false,\"allowCommands\":true,\"injectedCredentialTypes\":[\"bitbucket-api-token\",\"github-api-token\"]},{\"path\":\"estafette/estafette-ci-builder\",\"runPrivileged\":true,\"runDocker\":false,\"allowCommands\":false}]}", string(jsonBytes))
 	})
 }
 
