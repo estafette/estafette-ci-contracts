@@ -30,6 +30,8 @@ type Pipeline struct {
 	Duration             time.Duration               `json:"duration"`
 	LastUpdatedAt        time.Time                   `json:"lastUpdatedAt"`
 	ManifestObject       *manifest.EstafetteManifest `json:"-"`
+	RecentCommitters     []string                    `json:"recentCommitters,omitempty"`
+	RecentReleasers      []string                    `json:"recentReleasers,omitempty"`
 }
 
 // GetFullRepoPath returns the full path of the pipeline repository with source, owner and name
