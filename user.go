@@ -2,6 +2,7 @@ package contracts
 
 // User represents a user of Estafette
 type User struct {
+	ID         string         `json:"id"`
 	Name       string         `json:"name,omitempty"`
 	Active     bool           `json:"active,omitempty"`
 	Identities []UserIdentity `json:"identities,omitempty"`
