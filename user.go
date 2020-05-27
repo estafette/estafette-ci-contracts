@@ -4,13 +4,14 @@ import "time"
 
 // User represents a user of Estafette
 type User struct {
-	ID         string         `json:"id"`
-	Name       string         `json:"name,omitempty"`
-	Active     bool           `json:"active,omitempty"`
-	Identities []UserIdentity `json:"identities,omitempty"`
-	Groups     []UserGroup    `json:"groups,omitempty"`
-	FirstVisit time.Time      `json:"firstVisit,omitempty"`
-	LastVisit  time.Time      `json:"lastVisit,omitempty"`
+	ID          string                 `json:"id"`
+	Name        string                 `json:"name,omitempty"`
+	Active      bool                   `json:"active,omitempty"`
+	Identities  []*UserIdentity        `json:"identities,omitempty"`
+	Groups      []*UserGroup           `json:"groups,omitempty"`
+	Preferences map[string]interface{} `json:"preferences,omitempty"`
+	FirstVisit  time.Time              `json:"firstVisit,omitempty"`
+	LastVisit   time.Time              `json:"lastVisit,omitempty"`
 }
 
 // UserIdentity represents the various identities a user can have in different systems
