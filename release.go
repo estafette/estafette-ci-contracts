@@ -19,6 +19,7 @@ type Release struct {
 	ReleaseStatus   string                    `json:"releaseStatus,omitempty"`
 	Events          []manifest.EstafetteEvent `json:"triggerEvents,omitempty"`
 	InsertedAt      *time.Time                `json:"insertedAt,omitempty"`
+	StartedAt       *time.Time                `json:"startedAt,omitempty"`
 	UpdatedAt       *time.Time                `json:"updatedAt,omitempty"`
 	Duration        *time.Duration            `json:"duration,omitempty"`
 	PendingDuration *time.Duration            `json:"pendingDuration,omitempty"`

@@ -25,6 +25,7 @@ type Build struct {
 	Triggers             []manifest.EstafetteTrigger `json:"triggers,omitempty"`
 	Events               []manifest.EstafetteEvent   `json:"triggerEvents,omitempty"`
 	InsertedAt           time.Time                   `json:"insertedAt"`
+	StartedAt            *time.Time                  `json:"startedAt,omitempty"`
 	UpdatedAt            time.Time                   `json:"updatedAt"`
 	Duration             time.Duration               `json:"duration"`
 	PendingDuration      *time.Duration              `json:"pendingDuration,omitempty"`
