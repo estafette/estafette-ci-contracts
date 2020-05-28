@@ -28,6 +28,7 @@ type Pipeline struct {
 	InsertedAt           time.Time                   `json:"insertedAt"`
 	UpdatedAt            time.Time                   `json:"updatedAt"`
 	Duration             time.Duration               `json:"duration"`
+	PendingDuration      *time.Duration              `json:"pendingDuration,omitempty"`
 	LastUpdatedAt        time.Time                   `json:"lastUpdatedAt"`
 	ManifestObject       *manifest.EstafetteManifest `json:"-"`
 	RecentCommitters     []string                    `json:"recentCommitters,omitempty"`

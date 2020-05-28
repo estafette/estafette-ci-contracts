@@ -27,6 +27,7 @@ type Build struct {
 	InsertedAt           time.Time                   `json:"insertedAt"`
 	UpdatedAt            time.Time                   `json:"updatedAt"`
 	Duration             time.Duration               `json:"duration"`
+	PendingDuration      *time.Duration              `json:"pendingDuration,omitempty"`
 	ManifestObject       *manifest.EstafetteManifest `json:"-"`
 }
 
