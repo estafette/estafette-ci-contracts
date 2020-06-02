@@ -16,15 +16,16 @@ type User struct {
 
 // UserIdentity represents the various identities a user can have in different systems
 type UserIdentity struct {
-	Source   string `json:"source,omitempty"`
 	Provider string `json:"provider,omitempty"`
-	Username string `json:"username,omitempty"`
+	ID       string `json:"id,omitempty"`
 	Email    string `json:"email,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Avatar   string `json:"avatar,omitempty"`
 }
 
 // UserGroup represents a group of users as configured in different systems
 type UserGroup struct {
-	Source   string `json:"source,omitempty"`
 	Provider string `json:"provider,omitempty"`
+	ID       string `json:"id,omitempty"`
 	Name     string `json:"name,omitempty"`
 }
