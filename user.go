@@ -29,3 +29,39 @@ type UserGroup struct {
 	ID       string `json:"id,omitempty"`
 	Name     string `json:"name,omitempty"`
 }
+
+func (u *User) GetEmail() string {
+	if u.Identities != nil && len(u.Identities) > 0 {
+		for _, i := range u.Identities {
+			if i.Email != "" {
+				return i.Email
+			}
+		}
+	}
+
+	return ""
+}
+
+func (u *User) GetProvider() string {
+	if u.Identities != nil && len(u.Identities) > 0 {
+		for _, i := range u.Identities {
+			if i.Provider != "" {
+				return i.Provider
+			}
+		}
+	}
+
+	return ""
+}
+
+func (u *User) GetName() string {
+	if u.Identities != nil && len(u.Identities) > 0 {
+		for _, i := range u.Identities {
+			if i.Name != "" {
+				return i.Name
+			}
+		}
+	}
+
+	return ""
+}
