@@ -4,9 +4,12 @@ import "time"
 
 // User represents a user of Estafette
 type User struct {
-	ID              string                 `json:"id,omitempty"`
-	Name            string                 `json:"name,omitempty"`
-	Active          bool                   `json:"active,omitempty"`
+	ID     string `json:"id,omitempty"`
+	Active bool   `json:"active,omitempty"`
+	// Name is derived from the first identity with a name
+	Name string `json:"name,omitempty"`
+	// Email is derived from the first identity with an email address
+	Email           string                 `json:"email,omitempty"`
 	Identities      []*UserIdentity        `json:"identities,omitempty"`
 	Groups          []*UserGroup           `json:"groups,omitempty"`
 	Preferences     map[string]interface{} `json:"preferences,omitempty"`
@@ -31,6 +34,7 @@ type UserGroup struct {
 	Name     string `json:"name,omitempty"`
 }
 
+// GetEmail returns the first identity email address
 func (u *User) GetEmail() string {
 	if u.Identities != nil && len(u.Identities) > 0 {
 		for _, i := range u.Identities {
@@ -43,6 +47,7 @@ func (u *User) GetEmail() string {
 	return ""
 }
 
+// GetProvider returns the first identity provider
 func (u *User) GetProvider() string {
 	if u.Identities != nil && len(u.Identities) > 0 {
 		for _, i := range u.Identities {
@@ -55,6 +60,7 @@ func (u *User) GetProvider() string {
 	return ""
 }
 
+// GetName returns the first identity name
 func (u *User) GetName() string {
 	if u.Identities != nil && len(u.Identities) > 0 {
 		for _, i := range u.Identities {
