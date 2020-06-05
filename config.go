@@ -114,6 +114,7 @@ type CIServerConfig struct {
 	BuilderEventsURL string `json:"builderEventsUrl"`
 	PostLogsURL      string `json:"postLogsUrl"`
 	APIKey           string `json:"apiKey"`
+	JWT              string `json:"jwt"`
 }
 
 // DockerNetworkConfig has settings for creating a user defined docker network to make service containers accessible by name from other containers
