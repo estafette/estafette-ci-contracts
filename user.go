@@ -93,7 +93,7 @@ func (u *User) HasRole(role string) bool {
 // AddRole adds a role if it's not present
 func (u *User) AddRole(role string) {
 	if !u.HasRole(role) {
-		u.Roles = append(u.Roles)
+		u.Roles = append(u.Roles, &role)
 	}
 }
 
