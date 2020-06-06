@@ -11,7 +11,9 @@ type User struct {
 	// Email is derived from the first identity with an email address
 	Email           string                 `json:"email,omitempty"`
 	Identities      []*UserIdentity        `json:"identities,omitempty"`
+	Organizations   []*UserOrganization    `json:"organizations,omitempty"`
 	Groups          []*UserGroup           `json:"groups,omitempty"`
+	Roles           []string               `json:"roles,omitempty"`
 	Preferences     map[string]interface{} `json:"preferences,omitempty"`
 	FirstVisit      *time.Time             `json:"firstVisit,omitempty"`
 	LastVisit       *time.Time             `json:"lastVisit,omitempty"`
@@ -32,6 +34,11 @@ type UserGroup struct {
 	Provider string `json:"provider,omitempty"`
 	ID       string `json:"id,omitempty"`
 	Name     string `json:"name,omitempty"`
+}
+
+// UserOrganization represents an organization that uses a multi-tenancy installation
+type UserOrganization struct {
+	Name string `json:"name,omitempty"`
 }
 
 // GetEmail returns the first identity email address
@@ -71,4 +78,33 @@ func (u *User) GetName() string {
 	}
 
 	return ""
+}
+
+// HasRole returns true if a user has the parameterized role
+func (u *User) HasRole(role string) bool {
+	for _, r := range u.Roles {
+		if r == role {
+			return true
+		}
+	}
+	return false
+}
+
+// AddRole adds a role if it's not present
+func (u *User) AddRole(role string) {
+	if !u.HasRole(role) {
+		u.Roles = append(u.Roles)
+	}
+}
+
+// RemoveRole removes a role if it's present
+func (u *User) RemoveRole(role string) {
+	remainingRoles := []string{}
+	for _, r := range u.Roles {
+		if r != role {
+			remainingRoles = append(remainingRoles, r)
+		}
+	}
+
+	u.Roles = remainingRoles
 }
