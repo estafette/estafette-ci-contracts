@@ -13,7 +13,7 @@ type User struct {
 	Identities      []*UserIdentity        `json:"identities,omitempty"`
 	Organizations   []*UserOrganization    `json:"organizations,omitempty"`
 	Groups          []*UserGroup           `json:"groups,omitempty"`
-	Roles           []string               `json:"roles,omitempty"`
+	Roles           []*string              `json:"roles,omitempty"`
 	Preferences     map[string]interface{} `json:"preferences,omitempty"`
 	FirstVisit      *time.Time             `json:"firstVisit,omitempty"`
 	LastVisit       *time.Time             `json:"lastVisit,omitempty"`
@@ -83,7 +83,7 @@ func (u *User) GetName() string {
 // HasRole returns true if a user has the parameterized role
 func (u *User) HasRole(role string) bool {
 	for _, r := range u.Roles {
-		if r == role {
+		if r != nil && *r == role {
 			return true
 		}
 	}
@@ -99,9 +99,9 @@ func (u *User) AddRole(role string) {
 
 // RemoveRole removes a role if it's present
 func (u *User) RemoveRole(role string) {
-	remainingRoles := []string{}
+	remainingRoles := []*string{}
 	for _, r := range u.Roles {
-		if r != role {
+		if r != nil && *r != role {
 			remainingRoles = append(remainingRoles, r)
 		}
 	}
