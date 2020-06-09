@@ -7,8 +7,8 @@ type User struct {
 	ID              string                 `json:"id,omitempty"`
 	Active          bool                   `json:"active,omitempty"`
 	Identities      []*UserIdentity        `json:"identities,omitempty"`
-	Organizations   []*Organization        `json:"organizations,omitempty"`
 	Groups          []*Group               `json:"groups,omitempty"`
+	Organizations   []*Organization        `json:"organizations,omitempty"`
 	Roles           []*string              `json:"roles,omitempty"`
 	Preferences     map[string]interface{} `json:"preferences,omitempty"`
 	FirstVisit      *time.Time             `json:"firstVisit,omitempty"`
@@ -31,9 +31,10 @@ type UserIdentity struct {
 
 // Group represents a group of users as configured in different systems
 type Group struct {
-	ID         string           `json:"id,omitempty"`
-	Name       string           `json:"name,omitempty"`
-	Identities []*GroupIdentity `json:"identities,omitempty"`
+	ID            string           `json:"id,omitempty"`
+	Name          string           `json:"name,omitempty"`
+	Identities    []*GroupIdentity `json:"identities,omitempty"`
+	Organizations []*Organization  `json:"organizations,omitempty"`
 }
 
 // GroupIdentity represents the various identities a group can have in different systems
