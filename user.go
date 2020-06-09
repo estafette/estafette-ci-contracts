@@ -4,20 +4,20 @@ import "time"
 
 // User represents a user of Estafette
 type User struct {
-	ID     string `json:"id,omitempty"`
-	Active bool   `json:"active,omitempty"`
-	// Name is derived from the first identity with a name
-	Name string `json:"name,omitempty"`
-	// Email is derived from the first identity with an email address
-	Email           string                 `json:"email,omitempty"`
+	ID              string                 `json:"id,omitempty"`
+	Active          bool                   `json:"active,omitempty"`
 	Identities      []*UserIdentity        `json:"identities,omitempty"`
-	Organizations   []*UserOrganization    `json:"organizations,omitempty"`
-	Groups          []*UserGroup           `json:"groups,omitempty"`
+	Organizations   []*Organization        `json:"organizations,omitempty"`
+	Groups          []*Group               `json:"groups,omitempty"`
 	Roles           []*string              `json:"roles,omitempty"`
 	Preferences     map[string]interface{} `json:"preferences,omitempty"`
 	FirstVisit      *time.Time             `json:"firstVisit,omitempty"`
 	LastVisit       *time.Time             `json:"lastVisit,omitempty"`
 	CurrentProvider string                 `json:"currentProvider,omitempty"`
+
+	// computed fields
+	Name  string `json:"name,omitempty"`
+	Email string `json:"email,omitempty"`
 }
 
 // UserIdentity represents the various identities a user can have in different systems
@@ -29,16 +29,32 @@ type UserIdentity struct {
 	Avatar   string `json:"avatar,omitempty"`
 }
 
-// UserGroup represents a group of users as configured in different systems
-type UserGroup struct {
+// Group represents a group of users as configured in different systems
+type Group struct {
+	ID         string           `json:"id,omitempty"`
+	Name       string           `json:"name,omitempty"`
+	Identities []*GroupIdentity `json:"identities,omitempty"`
+}
+
+// GroupIdentity represents the various identities a group can have in different systems
+type GroupIdentity struct {
 	Provider string `json:"provider,omitempty"`
 	ID       string `json:"id,omitempty"`
 	Name     string `json:"name,omitempty"`
 }
 
-// UserOrganization represents an organization that uses a multi-tenancy installation
-type UserOrganization struct {
-	Name string `json:"name,omitempty"`
+// Organization represents an organization that uses a multi-tenancy installation
+type Organization struct {
+	ID         string                  `json:"id,omitempty"`
+	Name       string                  `json:"name,omitempty"`
+	Identities []*OrganizationIdentity `json:"identities,omitempty"`
+}
+
+// OrganizationIdentity represents the various identities an organization can have in different systems
+type OrganizationIdentity struct {
+	Provider string `json:"provider,omitempty"`
+	ID       string `json:"id,omitempty"`
+	Name     string `json:"name,omitempty"`
 }
 
 // GetEmail returns the first identity email address
