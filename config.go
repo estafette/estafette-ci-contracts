@@ -113,7 +113,6 @@ type CIServerConfig struct {
 	BaseURL          string `json:"baseUrl"`
 	BuilderEventsURL string `json:"builderEventsUrl"`
 	PostLogsURL      string `json:"postLogsUrl"`
-	APIKey           string `json:"apiKey"`
 	JWT              string `json:"jwt"`
 }
 
