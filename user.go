@@ -35,6 +35,7 @@ type Group struct {
 	Name          string           `json:"name,omitempty"`
 	Identities    []*GroupIdentity `json:"identities,omitempty"`
 	Organizations []*Organization  `json:"organizations,omitempty"`
+	Roles         []*string        `json:"roles,omitempty"`
 }
 
 // GroupIdentity represents the various identities a group can have in different systems
@@ -49,6 +50,7 @@ type Organization struct {
 	ID         string                  `json:"id,omitempty"`
 	Name       string                  `json:"name,omitempty"`
 	Identities []*OrganizationIdentity `json:"identities,omitempty"`
+	Roles      []*string               `json:"roles,omitempty"`
 }
 
 // OrganizationIdentity represents the various identities an organization can have in different systems
