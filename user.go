@@ -4,16 +4,17 @@ import "time"
 
 // User represents a user of Estafette
 type User struct {
-	ID              string                 `json:"id,omitempty"`
-	Active          bool                   `json:"active,omitempty"`
-	Identities      []*UserIdentity        `json:"identities,omitempty"`
-	Groups          []*Group               `json:"groups,omitempty"`
-	Organizations   []*Organization        `json:"organizations,omitempty"`
-	Roles           []*string              `json:"roles,omitempty"`
-	Preferences     map[string]interface{} `json:"preferences,omitempty"`
-	FirstVisit      *time.Time             `json:"firstVisit,omitempty"`
-	LastVisit       *time.Time             `json:"lastVisit,omitempty"`
-	CurrentProvider string                 `json:"currentProvider,omitempty"`
+	ID                  string                 `json:"id,omitempty"`
+	Active              bool                   `json:"active,omitempty"`
+	Identities          []*UserIdentity        `json:"identities,omitempty"`
+	Groups              []*Group               `json:"groups,omitempty"`
+	Organizations       []*Organization        `json:"organizations,omitempty"`
+	Roles               []*string              `json:"roles,omitempty"`
+	Preferences         map[string]interface{} `json:"preferences,omitempty"`
+	FirstVisit          *time.Time             `json:"firstVisit,omitempty"`
+	LastVisit           *time.Time             `json:"lastVisit,omitempty"`
+	CurrentProvider     string                 `json:"currentProvider,omitempty"`
+	CurrentOrganization string                 `json:"currentOrganization,omitempty"`
 
 	// computed fields
 	Name  string `json:"name,omitempty"`
