@@ -12,6 +12,6 @@ type CatalogEntity struct {
 	LinkedPipeline string                 `json:"linked_pipeline,omitempty"`
 	Labels         []Label                `json:"labels,omitempty"`
 	Metadata       map[string]interface{} `json:"entity_metadata,omitempty"`
-	FirstVisit     *time.Time             `json:"firstVisit,omitempty"`
-	LastVisit      *time.Time             `json:"lastVisit,omitempty"`
+	InsertedAt     *time.Time             `json:"insertedAt,omitempty"`
+	UpdatedAt      *time.Time             `json:"updatedAt,omitempty"`
 }
