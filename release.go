@@ -23,6 +23,13 @@ type Release struct {
 	UpdatedAt       *time.Time                `json:"updatedAt,omitempty"`
 	Duration        *time.Duration            `json:"duration,omitempty"`
 	PendingDuration *time.Duration            `json:"pendingDuration,omitempty"`
+	ExtraInfo       *ReleaseExtraInfo         `json:"extraInfo,omitempty"`
+}
+
+// ReleaseExtraInfo contains extra information like aggregates over the last x releases
+type ReleaseExtraInfo struct {
+	MedianPendingDuration time.Duration `json:"medianPendingDuration"`
+	MedianDuration        time.Duration `json:"medianDuration"`
 }
 
 // GetFullRepoPath returns the full path of the release repository with source, owner and name
