@@ -34,9 +34,16 @@ type Pipeline struct {
 	ManifestObject       *manifest.EstafetteManifest `json:"-"`
 	RecentCommitters     []string                    `json:"recentCommitters,omitempty"`
 	RecentReleasers      []string                    `json:"recentReleasers,omitempty"`
+	ExtraInfo            *PipelineExtraInfo          `json:"extraInfo,omitempty"`
 }
 
 // GetFullRepoPath returns the full path of the pipeline repository with source, owner and name
 func (pipeline *Pipeline) GetFullRepoPath() string {
 	return fmt.Sprintf("%v/%v/%v", pipeline.RepoSource, pipeline.RepoOwner, pipeline.RepoName)
+}
+
+// PipelineExtraInfo contains extra information like aggregates over the last x builds
+type PipelineExtraInfo struct {
+	MedianPendingDuration time.Duration `json:"medianPendingDuration"`
+	MedianDuration        time.Duration `json:"medianDuration"`
 }
