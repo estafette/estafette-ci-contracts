@@ -33,6 +33,7 @@ type UserIdentity struct {
 // Group represents a group of users as configured in different systems
 type Group struct {
 	ID            string           `json:"id,omitempty"`
+	Active        bool             `json:"active,omitempty"`
 	Name          string           `json:"name,omitempty"`
 	Identities    []*GroupIdentity `json:"identities,omitempty"`
 	Organizations []*Organization  `json:"organizations,omitempty"`
@@ -49,6 +50,7 @@ type GroupIdentity struct {
 // Organization represents an organization that uses a multi-tenancy installation
 type Organization struct {
 	ID         string                  `json:"id,omitempty"`
+	Active     bool                    `json:"active,omitempty"`
 	Name       string                  `json:"name,omitempty"`
 	Identities []*OrganizationIdentity `json:"identities,omitempty"`
 	Roles      []*string               `json:"roles,omitempty"`
