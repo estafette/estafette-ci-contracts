@@ -30,6 +30,8 @@ type Build struct {
 	Duration             time.Duration               `json:"duration"`
 	PendingDuration      *time.Duration              `json:"pendingDuration,omitempty"`
 	ManifestObject       *manifest.EstafetteManifest `json:"-"`
+	Groups               []*Group                    `json:"groups,omitempty"`
+	Organizations        []*Organization             `json:"organizations,omitempty"`
 }
 
 // GetFullRepoPath returns the full path of the build repository with source, owner and name

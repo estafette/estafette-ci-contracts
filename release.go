@@ -24,6 +24,8 @@ type Release struct {
 	Duration        *time.Duration            `json:"duration,omitempty"`
 	PendingDuration *time.Duration            `json:"pendingDuration,omitempty"`
 	ExtraInfo       *ReleaseExtraInfo         `json:"extraInfo,omitempty"`
+	Groups          []*Group                  `json:"groups,omitempty"`
+	Organizations   []*Organization           `json:"organizations,omitempty"`
 }
 
 // ReleaseExtraInfo contains extra information like aggregates over the last x releases

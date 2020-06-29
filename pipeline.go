@@ -35,6 +35,8 @@ type Pipeline struct {
 	RecentCommitters     []string                    `json:"recentCommitters,omitempty"`
 	RecentReleasers      []string                    `json:"recentReleasers,omitempty"`
 	ExtraInfo            *PipelineExtraInfo          `json:"extraInfo,omitempty"`
+	Groups               []*Group                    `json:"groups,omitempty"`
+	Organizations        []*Organization             `json:"organizations,omitempty"`
 }
 
 // GetFullRepoPath returns the full path of the pipeline repository with source, owner and name
