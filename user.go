@@ -35,6 +35,7 @@ type Group struct {
 	ID            string           `json:"id,omitempty"`
 	Active        bool             `json:"active,omitempty"`
 	Name          string           `json:"name,omitempty"`
+	Description   string           `json:"description,omitempty"`
 	Identities    []*GroupIdentity `json:"identities,omitempty"`
 	Organizations []*Organization  `json:"organizations,omitempty"`
 	Roles         []*string        `json:"roles,omitempty"`
