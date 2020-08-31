@@ -44,22 +44,22 @@ type BuilderConfig struct {
 // CredentialConfig is used to store credentials for every type of authenticated service you can use from docker registries, to kubernetes engine to, github apis, bitbucket;
 // in combination with trusted images access to these centrally stored credentials can be limited
 type CredentialConfig struct {
-	Name                     string                 `yaml:"name" json:"name"`
-	Type                     string                 `yaml:"type" json:"type"`
-	WhitelistedPipelines     string                 `yaml:"whitelistedPipelines,omitempty" json:"whitelistedPipelines,omitempty"`
-	WhitelistedTrustedImages string                 `yaml:"whitelistedTrustedImages,omitempty" json:"whitelistedTrustedImages,omitempty"`
-	AdditionalProperties     map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
+	Name                 string                 `yaml:"name" json:"name"`
+	Type                 string                 `yaml:"type" json:"type"`
+	AllowedPipelines     string                 `yaml:"allowedPipelines,omitempty" json:"allowedPipelines,omitempty"`
+	AllowedTrustedImages string                 `yaml:"allowedTrustedImages,omitempty" json:"allowedTrustedImages,omitempty"`
+	AdditionalProperties map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
 }
 
 // UnmarshalYAML customizes unmarshalling an EstafetteStage
 func (cc *CredentialConfig) UnmarshalYAML(unmarshal func(interface{}) error) (err error) {
 
 	var aux struct {
-		Name                     string                 `yaml:"name" json:"name"`
-		Type                     string                 `yaml:"type" json:"type"`
-		WhitelistedPipelines     string                 `yaml:"whitelistedPipelines,omitempty" json:"whitelistedPipelines,omitempty"`
-		WhitelistedTrustedImages string                 `yaml:"whitelistedTrustedImages,omitempty" json:"whitelistedTrustedImages,omitempty"`
-		AdditionalProperties     map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
+		Name                 string                 `yaml:"name" json:"name"`
+		Type                 string                 `yaml:"type" json:"type"`
+		AllowedPipelines     string                 `yaml:"allowedPipelines,omitempty" json:"allowedPipelines,omitempty"`
+		AllowedTrustedImages string                 `yaml:"allowedTrustedImages,omitempty" json:"allowedTrustedImages,omitempty"`
+		AdditionalProperties map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
 	}
 
 	// unmarshal to auxiliary type
@@ -70,8 +70,8 @@ func (cc *CredentialConfig) UnmarshalYAML(unmarshal func(interface{}) error) (er
 	// map auxiliary properties
 	cc.Name = aux.Name
 	cc.Type = aux.Type
-	cc.WhitelistedPipelines = aux.WhitelistedPipelines
-	cc.WhitelistedTrustedImages = aux.WhitelistedTrustedImages
+	cc.AllowedPipelines = aux.AllowedPipelines
+	cc.AllowedTrustedImages = aux.AllowedTrustedImages
 
 	// fix for map[interface{}]interface breaking json.marshal - see https://github.com/go-yaml/yaml/issues/139
 	cc.AdditionalProperties = cleanUpStringMap(aux.AdditionalProperties)
@@ -86,7 +86,7 @@ type TrustedImageConfig struct {
 	RunDocker               bool     `yaml:"runDocker" json:"runDocker"`
 	AllowCommands           bool     `yaml:"allowCommands" json:"allowCommands"`
 	InjectedCredentialTypes []string `yaml:"injectedCredentialTypes,omitempty" json:"injectedCredentialTypes,omitempty"`
-	WhitelistedPipelines    string   `yaml:"whitelistedPipelines,omitempty" json:"whitelistedPipelines,omitempty"`
+	AllowedPipelines        string   `yaml:"allowedPipelines,omitempty" json:"allowedPipelines,omitempty"`
 }
 
 // GitConfig contains all information for cloning the git repository for building/releasing a specific version
@@ -164,12 +164,12 @@ func GetCredentialsByType(credentials []*CredentialConfig, filterType string) []
 	return filteredCredentials
 }
 
-// FilterCredentialsByTrustedImagesWhitelist returns the list of credentials filtered by the WhitelistedTrustedImages property on the credentials
-func FilterCredentialsByTrustedImagesWhitelist(credentials []*CredentialConfig, trustedImage TrustedImageConfig) (filteredCredentials []*CredentialConfig) {
+// FilterCredentialsByTrustedImagesAllowList returns the list of credentials filtered by the AllowedTrustedImages property on the credentials
+func FilterCredentialsByTrustedImagesAllowList(credentials []*CredentialConfig, trustedImage TrustedImageConfig) (filteredCredentials []*CredentialConfig) {
 
 	filteredCredentials = make([]*CredentialConfig, 0)
 	for _, c := range credentials {
-		if IsWhitelistedTrustedImageForCredential(*c, trustedImage) {
+		if IsAllowedTrustedImageForCredential(*c, trustedImage) {
 			filteredCredentials = append(filteredCredentials, c)
 		}
 	}
@@ -177,25 +177,25 @@ func FilterCredentialsByTrustedImagesWhitelist(credentials []*CredentialConfig, 
 	return
 }
 
-// IsWhitelistedTrustedImageForCredential returns true if WhitelistedTrustedImages is empty or matches the trusted image Path property
-func IsWhitelistedTrustedImageForCredential(credential CredentialConfig, trustedImage TrustedImageConfig) bool {
+// IsAllowedTrustedImageForCredential returns true if AllowedTrustedImages is empty or matches the trusted image Path property
+func IsAllowedTrustedImageForCredential(credential CredentialConfig, trustedImage TrustedImageConfig) bool {
 
-	if credential.WhitelistedTrustedImages == "" {
+	if credential.AllowedTrustedImages == "" {
 		return true
 	}
 
-	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.WhitelistedTrustedImages))
+	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.AllowedTrustedImages))
 	isMatch, _ := regexp.Match(pattern, []byte(trustedImage.ImagePath))
 
 	return isMatch
 }
 
-// FilterCredentialsByPipelinesWhitelist returns the list of credentials filtered by the WhitelistedTrustedPipelines property on the credentials
-func FilterCredentialsByPipelinesWhitelist(credentials []*CredentialConfig, fullRepositoryPath string) (filteredCredentials []*CredentialConfig) {
+// FilterCredentialsByPipelinesAllowList returns the list of credentials filtered by the AllowedTrustedPipelines property on the credentials
+func FilterCredentialsByPipelinesAllowList(credentials []*CredentialConfig, fullRepositoryPath string) (filteredCredentials []*CredentialConfig) {
 
 	filteredCredentials = make([]*CredentialConfig, 0)
 	for _, c := range credentials {
-		if IsWhitelistedPipelineForCredential(*c, fullRepositoryPath) {
+		if IsAllowedPipelineForCredential(*c, fullRepositoryPath) {
 			filteredCredentials = append(filteredCredentials, c)
 		}
 	}
@@ -203,25 +203,25 @@ func FilterCredentialsByPipelinesWhitelist(credentials []*CredentialConfig, full
 	return
 }
 
-// IsWhitelistedPipelineForCredential returns true if WhitelistedPipelines is empty or matches the pipelines full path
-func IsWhitelistedPipelineForCredential(credential CredentialConfig, fullRepositoryPath string) bool {
+// IsAllowedPipelineForCredential returns true if AllowedPipelines is empty or matches the pipelines full path
+func IsAllowedPipelineForCredential(credential CredentialConfig, fullRepositoryPath string) bool {
 
-	if credential.WhitelistedPipelines == "" {
+	if credential.AllowedPipelines == "" {
 		return true
 	}
 
-	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.WhitelistedPipelines))
+	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.AllowedPipelines))
 	isMatch, _ := regexp.Match(pattern, []byte(fullRepositoryPath))
 
 	return isMatch
 }
 
-// FilterTrustedImagesByPipelinesWhitelist returns the list of trusted images filtered by the WhitelistedTrustedPipelines property on the trusted images
-func FilterTrustedImagesByPipelinesWhitelist(trustedImages []*TrustedImageConfig, fullRepositoryPath string) (filteredTrustedImages []*TrustedImageConfig) {
+// FilterTrustedImagesByPipelinesAllowList returns the list of trusted images filtered by the AllowedTrustedPipelines property on the trusted images
+func FilterTrustedImagesByPipelinesAllowList(trustedImages []*TrustedImageConfig, fullRepositoryPath string) (filteredTrustedImages []*TrustedImageConfig) {
 
 	filteredTrustedImages = make([]*TrustedImageConfig, 0)
 	for _, ti := range trustedImages {
-		if IsWhitelistedPipelineForTrustedImage(*ti, fullRepositoryPath) {
+		if IsAllowedPipelineForTrustedImage(*ti, fullRepositoryPath) {
 			filteredTrustedImages = append(filteredTrustedImages, ti)
 		}
 	}
@@ -229,14 +229,14 @@ func FilterTrustedImagesByPipelinesWhitelist(trustedImages []*TrustedImageConfig
 	return
 }
 
-// IsWhitelistedPipelineForTrustedImage returns true if WhitelistedPipelines is empty or matches the pipelines full path
-func IsWhitelistedPipelineForTrustedImage(trustedImage TrustedImageConfig, fullRepositoryPath string) bool {
+// IsAllowedPipelineForTrustedImage returns true if AllowedPipelines is empty or matches the pipelines full path
+func IsAllowedPipelineForTrustedImage(trustedImage TrustedImageConfig, fullRepositoryPath string) bool {
 
-	if trustedImage.WhitelistedPipelines == "" {
+	if trustedImage.AllowedPipelines == "" {
 		return true
 	}
 
-	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(trustedImage.WhitelistedPipelines))
+	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(trustedImage.AllowedPipelines))
 	isMatch, _ := regexp.Match(pattern, []byte(fullRepositoryPath))
 
 	return isMatch
@@ -254,8 +254,8 @@ func GetCredentialsForTrustedImage(credentials []*CredentialConfig, trustedImage
 
 	for _, filterType := range trustedImage.InjectedCredentialTypes {
 		credsByType := GetCredentialsByType(credentials, filterType)
-		// filter by whitelist
-		credsByType = FilterCredentialsByTrustedImagesWhitelist(credsByType, trustedImage)
+		// filter by allow list
+		credsByType = FilterCredentialsByTrustedImagesAllowList(credsByType, trustedImage)
 		if len(credsByType) > 0 {
 			credentialMap[filterType] = credsByType
 		}
@@ -344,8 +344,8 @@ func FilterTrustedImages(trustedImages []*TrustedImageConfig, stages []*manifest
 		}
 	}
 
-	// filter by whitelist
-	filteredImages = FilterTrustedImagesByPipelinesWhitelist(filteredImages, fullRepositoryPath)
+	// filter by allow list
+	filteredImages = FilterTrustedImagesByPipelinesAllowList(filteredImages, fullRepositoryPath)
 
 	return filteredImages
 }
@@ -360,8 +360,8 @@ func FilterCredentials(credentials []*CredentialConfig, trustedImages []*Trusted
 
 		// loop all items in credmap and add to filtered credentials if they haven't been already added
 		for _, v := range credMap {
-			// filter by whitelist
-			v = FilterCredentialsByPipelinesWhitelist(v, fullRepositoryPath)
+			// filter by allow list
+			v = FilterCredentialsByPipelinesAllowList(v, fullRepositoryPath)
 			filteredCredentials = AddCredentialsIfNotPresent(filteredCredentials, v)
 		}
 	}

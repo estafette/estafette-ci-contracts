@@ -661,16 +661,16 @@ func TestFilterTrustedImages(t *testing.T) {
 		}
 	})
 
-	t.Run("ReturnsListWithTrustedImagesWhitelistedForThisPipeline", func(t *testing.T) {
+	t.Run("ReturnsListWithTrustedImagesAllowedForThisPipeline", func(t *testing.T) {
 
 		trustedImages := []*TrustedImageConfig{
 			&TrustedImageConfig{
-				ImagePath:            "extensions/gke",
-				WhitelistedPipelines: "github.com/estafette/estafette-ci-contracts",
+				ImagePath:        "extensions/gke",
+				AllowedPipelines: "github.com/estafette/estafette-ci-contracts",
 			},
 			&TrustedImageConfig{
-				ImagePath:            "extensions/docker",
-				WhitelistedPipelines: "github.com/estafette/estafette-ci-api",
+				ImagePath:        "extensions/docker",
+				AllowedPipelines: "github.com/estafette/estafette-ci-api",
 			},
 		}
 		stages := []*manifest.EstafetteStage{
@@ -830,18 +830,18 @@ func TestFilterCredentials(t *testing.T) {
 		assert.Equal(t, "kubernetes-engine", filteredCredentials[1].Type)
 	})
 
-	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImagesWhitelistedForTrustedImages", func(t *testing.T) {
+	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImagesAllowedForTrustedImages", func(t *testing.T) {
 
 		credentials := []*CredentialConfig{
 			&CredentialConfig{
-				Name:                     "gke-a",
-				Type:                     "kubernetes-engine",
-				WhitelistedTrustedImages: "extensions/gke",
+				Name:                 "gke-a",
+				Type:                 "kubernetes-engine",
+				AllowedTrustedImages: "extensions/gke",
 			},
 			&CredentialConfig{
-				Name:                     "gke-b",
-				Type:                     "kubernetes-engine",
-				WhitelistedTrustedImages: "extensions/port-forward",
+				Name:                 "gke-b",
+				Type:                 "kubernetes-engine",
+				AllowedTrustedImages: "extensions/port-forward",
 			},
 			&CredentialConfig{
 				Name: "docker-hub",
@@ -873,18 +873,18 @@ func TestFilterCredentials(t *testing.T) {
 		assert.Equal(t, "kubernetes-engine", filteredCredentials[0].Type)
 	})
 
-	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImagesWhitelistedForPipeline", func(t *testing.T) {
+	t.Run("ReturnsListOfCredentialsSpecifiedForTrustedImagesAllowedForPipeline", func(t *testing.T) {
 
 		credentials := []*CredentialConfig{
 			&CredentialConfig{
-				Name:                 "gke-a",
-				Type:                 "kubernetes-engine",
-				WhitelistedPipelines: "github.com/estafette/estafette-ci-api",
+				Name:             "gke-a",
+				Type:             "kubernetes-engine",
+				AllowedPipelines: "github.com/estafette/estafette-ci-api",
 			},
 			&CredentialConfig{
-				Name:                 "gke-b",
-				Type:                 "kubernetes-engine",
-				WhitelistedPipelines: "github.com/estafette/estafette-ci-contracts",
+				Name:             "gke-b",
+				Type:             "kubernetes-engine",
+				AllowedPipelines: "github.com/estafette/estafette-ci-contracts",
 			},
 			&CredentialConfig{
 				Name: "docker-hub",
