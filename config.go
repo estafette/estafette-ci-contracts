@@ -184,7 +184,7 @@ func IsAllowedTrustedImageForCredential(credential CredentialConfig, trustedImag
 		return true
 	}
 
-	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.AllowedTrustedImages))
+	pattern := fmt.Sprintf("^(%v)$", strings.TrimSpace(credential.AllowedTrustedImages))
 	isMatch, _ := regexp.Match(pattern, []byte(trustedImage.ImagePath))
 
 	return isMatch
@@ -210,7 +210,7 @@ func IsAllowedPipelineForCredential(credential CredentialConfig, fullRepositoryP
 		return true
 	}
 
-	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(credential.AllowedPipelines))
+	pattern := fmt.Sprintf("^(%v)$", strings.TrimSpace(credential.AllowedPipelines))
 	isMatch, _ := regexp.Match(pattern, []byte(fullRepositoryPath))
 
 	return isMatch
@@ -236,7 +236,7 @@ func IsAllowedPipelineForTrustedImage(trustedImage TrustedImageConfig, fullRepos
 		return true
 	}
 
-	pattern := fmt.Sprintf("^%v$", strings.TrimSpace(trustedImage.AllowedPipelines))
+	pattern := fmt.Sprintf("^(%v)$", strings.TrimSpace(trustedImage.AllowedPipelines))
 	isMatch, _ := regexp.Match(pattern, []byte(fullRepositoryPath))
 
 	return isMatch
