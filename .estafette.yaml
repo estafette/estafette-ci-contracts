@@ -11,6 +11,7 @@ version:
   semver:
     major: 0
     minor: 0
+    releaseBranch: main
 
 stages:
   build:
