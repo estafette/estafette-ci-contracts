@@ -100,12 +100,15 @@ type GitConfig struct {
 
 // BuildVersionConfig contains all information regarding the version number to build or release
 type BuildVersionConfig struct {
-	Version       string  `json:"version"`
-	Major         *int    `json:"major,omitempty"`
-	Minor         *int    `json:"minor,omitempty"`
-	Patch         *string `json:"patch,omitempty"`
-	Label         *string `json:"label,omitempty"`
-	AutoIncrement *int    `json:"autoincrement,omitempty"`
+	Version                 string  `json:"version"`
+	Major                   *int    `json:"major,omitempty"`
+	Minor                   *int    `json:"minor,omitempty"`
+	Patch                   *string `json:"patch,omitempty"`
+	Label                   *string `json:"label,omitempty"`
+	AutoIncrement           *int    `json:"autoincrement,omitempty"`
+	CurrentCounter          int     `json:"currentCounter,omitempty"`
+	MaxCounter              int     `json:"maxCounter,omitempty"`
+	MaxCounterCurrentBranch int     `json:"maxCounterCurrentBranch,omitempty"`
 }
 
 // CIServerConfig has a number of config items related to communication or linking to the CI server
