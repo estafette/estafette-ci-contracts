@@ -37,7 +37,7 @@ func TestBuildLog(t *testing.T) {
 						},
 					},
 					ExitCode: 0,
-					Status:   StatusSucceeded,
+					Status:   LogStatusSucceeded,
 				},
 			},
 			InsertedAt: time.Date(2018, 4, 17, 8, 3, 0, 0, time.UTC),
@@ -65,11 +65,11 @@ func TestHasSucceededStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 		}
 
@@ -84,15 +84,15 @@ func TestHasSucceededStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
@@ -107,15 +107,15 @@ func TestHasSucceededStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusCanceled,
+				Status: LogStatusCanceled,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusCanceled,
+				Status: LogStatusCanceled,
 			},
 		}
 
@@ -130,20 +130,20 @@ func TestHasSucceededStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:     "stage-b",
 				RunIndex: 1,
-				Status:   StatusSucceeded,
+				Status:   LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
@@ -158,7 +158,7 @@ func TestHasSucceededStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
@@ -166,7 +166,7 @@ func TestHasSucceededStatus(t *testing.T) {
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
@@ -181,20 +181,20 @@ func TestHasSucceededStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:     "stage-b",
 				RunIndex: 1,
-				Status:   StatusSucceeded,
+				Status:   LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 		}
 
@@ -213,7 +213,7 @@ func TestGetAggregatedStatus(t *testing.T) {
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusUnknown, status)
+		assert.Equal(t, LogStatusUnknown, status)
 	})
 
 	t.Run("ReturnsSucceededIfAllStepsSucceeded", func(t *testing.T) {
@@ -221,18 +221,18 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusSucceeded, status)
+		assert.Equal(t, LogStatusSucceeded, status)
 	})
 
 	t.Run("ReturnsFailedIfAllStepsFailed", func(t *testing.T) {
@@ -240,18 +240,18 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusFailed, status)
+		assert.Equal(t, LogStatusFailed, status)
 	})
 
 	t.Run("ReturnsFailedIfAnyStepsFailed", func(t *testing.T) {
@@ -259,22 +259,22 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusFailed, status)
+		assert.Equal(t, LogStatusFailed, status)
 	})
 
 	t.Run("ReturnsCanceledIfAnyStepsCanceled", func(t *testing.T) {
@@ -282,22 +282,22 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusCanceled,
+				Status: LogStatusCanceled,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusCanceled, status)
+		assert.Equal(t, LogStatusCanceled, status)
 	})
 
 	t.Run("ReturnsSucceededIfAStepFailedButSucceededInRetry", func(t *testing.T) {
@@ -305,27 +305,27 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:     "stage-b",
 				RunIndex: 1,
-				Status:   StatusSucceeded,
+				Status:   LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusSucceeded, status)
+		assert.Equal(t, LogStatusSucceeded, status)
 	})
 
 	t.Run("ReturnsSucceededIfSomeStepsAreSkipped", func(t *testing.T) {
@@ -333,7 +333,7 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
@@ -341,14 +341,14 @@ func TestGetAggregatedStatus(t *testing.T) {
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusSucceeded, status)
+		assert.Equal(t, LogStatusSucceeded, status)
 	})
 
 	t.Run("ReturnsFailedIfAStepFailedButSucceededInRetryButAnotherStepFailed", func(t *testing.T) {
@@ -356,27 +356,27 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 			&BuildLogStep{
 				Step:     "stage-b",
 				RunIndex: 1,
-				Status:   StatusSucceeded,
+				Status:   LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusFailed,
+				Status: LogStatusFailed,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusFailed, status)
+		assert.Equal(t, LogStatusFailed, status)
 	})
 
 	t.Run("ReturnsCanceledIfAnyStepsCanceled", func(t *testing.T) {
@@ -384,21 +384,21 @@ func TestGetAggregatedStatus(t *testing.T) {
 		steps := []*BuildLogStep{
 			&BuildLogStep{
 				Step:   "stage-a",
-				Status: StatusSucceeded,
+				Status: LogStatusSucceeded,
 			},
 			&BuildLogStep{
 				Step:   "stage-b",
-				Status: StatusCanceled,
+				Status: LogStatusCanceled,
 			},
 			&BuildLogStep{
 				Step:   "stage-c",
-				Status: StatusCanceled,
+				Status: LogStatusCanceled,
 			},
 		}
 
 		// act
 		status := GetAggregatedStatus(steps)
 
-		assert.Equal(t, StatusCanceled, status)
+		assert.Equal(t, LogStatusCanceled, status)
 	})
 }

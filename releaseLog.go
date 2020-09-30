@@ -14,7 +14,7 @@ type ReleaseLog struct {
 }
 
 // GetAggregatedStatus returns the status aggregated across all stages
-func (releaseLog *ReleaseLog) GetAggregatedStatus() string {
+func (releaseLog *ReleaseLog) GetAggregatedStatus() LogStatus {
 	return GetAggregatedStatus(releaseLog.Steps)
 }
 

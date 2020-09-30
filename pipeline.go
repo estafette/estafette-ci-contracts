@@ -16,7 +16,7 @@ type Pipeline struct {
 	RepoBranch           string                      `json:"repoBranch"`
 	RepoRevision         string                      `json:"repoRevision"`
 	BuildVersion         string                      `json:"buildVersion,omitempty"`
-	BuildStatus          string                      `json:"buildStatus,omitempty"`
+	BuildStatus          Status                      `json:"buildStatus,omitempty"`
 	Labels               []Label                     `json:"labels,omitempty"`
 	ReleaseTargets       []ReleaseTarget             `json:"releaseTargets,omitempty"`
 	Manifest             string                      `json:"manifest,omitempty"`

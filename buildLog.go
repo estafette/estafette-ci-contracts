@@ -1,7 +1,6 @@
 package contracts
 
 import (
-	"strings"
 	"time"
 )
 
@@ -27,7 +26,7 @@ type BuildLogStep struct {
 	Duration     time.Duration            `json:"duration"`
 	LogLines     []BuildLogLine           `json:"logLines"`
 	ExitCode     int64                    `json:"exitCode"`
-	Status       string                   `json:"status"`
+	Status       LogStatus                `json:"status"`
 	AutoInjected bool                     `json:"autoInjected,omitempty"`
 	NestedSteps  []*BuildLogStep          `json:"nestedSteps,omitempty"`
 	Services     []*BuildLogStep          `json:"services,omitempty"`
@@ -68,34 +67,32 @@ type TailLogLine struct {
 }
 
 // GetAggregatedStatus returns the status aggregated across all stages
-func (buildLog *BuildLog) GetAggregatedStatus() string {
+func (buildLog *BuildLog) GetAggregatedStatus() LogStatus {
 	return GetAggregatedStatus(buildLog.Steps)
 }
 
 // GetAggregatedStatus returns the status aggregated across all stages
-func GetAggregatedStatus(steps []*BuildLogStep) string {
+func GetAggregatedStatus(steps []*BuildLogStep) LogStatus {
 
 	// aggregate per stage in order to take retries into account
-	statusPerStage := map[string]string{}
+	statusPerStage := map[string]LogStatus{}
 	for _, s := range steps {
-		status := strings.ToUpper(s.Status)
-
-		if status == StatusCanceled {
-			return StatusCanceled
+		if s.Status == LogStatusCanceled {
+			return LogStatusCanceled
 		}
 
 		// last status for a stage is leading
-		statusPerStage[s.Step] = strings.ToUpper(status)
+		statusPerStage[s.Step] = s.Status
 	}
 
 	// if any stage ended in failure, the aggregated status is failed as well
-	aggregatedStatus := StatusUnknown
+	aggregatedStatus := LogStatusUnknown
 	for _, status := range statusPerStage {
-		if status == StatusSucceeded && aggregatedStatus == StatusUnknown {
+		if status == LogStatusSucceeded && aggregatedStatus == LogStatusUnknown {
 			aggregatedStatus = status
 		}
-		if status == StatusFailed {
-			aggregatedStatus = StatusFailed
+		if status == LogStatusFailed {
+			aggregatedStatus = LogStatusFailed
 		}
 	}
 
@@ -111,7 +108,7 @@ func (buildLog *BuildLog) HasUnknownStatus() bool {
 func HasUnknownStatus(steps []*BuildLogStep) bool {
 	status := GetAggregatedStatus(steps)
 
-	return status == StatusUnknown
+	return status == LogStatusUnknown
 }
 
 // HasSucceededStatus returns true if aggregated status is succeeded
@@ -123,7 +120,7 @@ func (buildLog *BuildLog) HasSucceededStatus() bool {
 func HasSucceededStatus(steps []*BuildLogStep) bool {
 	status := GetAggregatedStatus(steps)
 
-	return status == StatusSucceeded
+	return status == LogStatusSucceeded
 }
 
 // HasFailedStatus returns true if aggregated status is failed
@@ -135,7 +132,7 @@ func (buildLog *BuildLog) HasFailedStatus() bool {
 func HasFailedStatus(steps []*BuildLogStep) bool {
 	status := GetAggregatedStatus(steps)
 
-	return status == StatusFailed
+	return status == LogStatusFailed
 }
 
 // HasCanceledStatus returns true if aggregated status is canceled
@@ -147,26 +144,5 @@ func (buildLog *BuildLog) HasCanceledStatus() bool {
 func HasCanceledStatus(steps []*BuildLogStep) bool {
 	status := GetAggregatedStatus(steps)
 
-	return status == StatusSucceeded
+	return status == LogStatusSucceeded
 }
-
-const (
-	// StatusUnknown indicates execution never started for some reason
-	StatusUnknown = "UNKNOWN"
-	// StatusSucceeded indicates execution was successful
-	StatusSucceeded = "SUCCEEDED"
-	// StatusFailed indicates execution was not successful
-	StatusFailed = "FAILED"
-	// StatusSkipped indicates execution was skipped
-	StatusSkipped = "SKIPPED"
-	// StatusCanceled indicates execution was canceled
-	StatusCanceled = "CANCELED"
-	// StatusPending indicates container is pulling
-	StatusPending = "PENDING"
-	// StatusRunning indicates container is running
-	StatusRunning = "RUNNING"
-	// TypeStage indicates that a tail message is for a main stage or parallel stage
-	TypeStage = "stage"
-	// TypeService indicates that a tail message is for a service container
-	TypeService = "service"
-)

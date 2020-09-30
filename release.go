@@ -16,7 +16,7 @@ type Release struct {
 	RepoOwner       string                    `json:"repoOwner,omitempty"`
 	RepoName        string                    `json:"repoName,omitempty"`
 	ReleaseVersion  string                    `json:"releaseVersion,omitempty"`
-	ReleaseStatus   string                    `json:"releaseStatus,omitempty"`
+	ReleaseStatus   Status                    `json:"releaseStatus,omitempty"`
 	Events          []manifest.EstafetteEvent `json:"triggerEvents,omitempty"`
 	InsertedAt      *time.Time                `json:"insertedAt,omitempty"`
 	StartedAt       *time.Time                `json:"startedAt,omitempty"`

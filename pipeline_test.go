@@ -20,7 +20,7 @@ func TestPipeline(t *testing.T) {
 			RepoBranch:   "master",
 			RepoRevision: "as23456",
 			BuildVersion: "1.0.0",
-			BuildStatus:  "succeeded",
+			BuildStatus:  StatusSucceeded,
 			Labels: []Label{
 				Label{
 					Key:   "app",
@@ -75,7 +75,7 @@ func TestPipeline(t *testing.T) {
 			RepoBranch:   "master",
 			RepoRevision: "as23456",
 			BuildVersion: "1.0.0",
-			BuildStatus:  "succeeded",
+			BuildStatus:  StatusSucceeded,
 			Labels: []Label{
 				Label{
 					Key:   "app",
@@ -113,7 +113,7 @@ func TestPipeline(t *testing.T) {
 			RepoBranch:   "master",
 			RepoRevision: "as23456",
 			BuildVersion: "1.0.0",
-			BuildStatus:  "succeeded",
+			BuildStatus:  StatusSucceeded,
 			Labels: []Label{
 				Label{
 					Key:   "app",
