@@ -48,6 +48,7 @@ type CredentialConfig struct {
 	Type                 string                 `yaml:"type" json:"type"`
 	AllowedPipelines     string                 `yaml:"allowedPipelines,omitempty" json:"allowedPipelines,omitempty"`
 	AllowedTrustedImages string                 `yaml:"allowedTrustedImages,omitempty" json:"allowedTrustedImages,omitempty"`
+	AllowedBranches      string                 `yaml:"allowedBranches,omitempty" json:"allowedBranches,omitempty"`
 	AdditionalProperties map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
 }
 
@@ -59,6 +60,7 @@ func (cc *CredentialConfig) UnmarshalYAML(unmarshal func(interface{}) error) (er
 		Type                 string                 `yaml:"type" json:"type"`
 		AllowedPipelines     string                 `yaml:"allowedPipelines,omitempty" json:"allowedPipelines,omitempty"`
 		AllowedTrustedImages string                 `yaml:"allowedTrustedImages,omitempty" json:"allowedTrustedImages,omitempty"`
+		AllowedBranches      string                 `yaml:"allowedBranches,omitempty" json:"allowedBranches,omitempty"`
 		AdditionalProperties map[string]interface{} `yaml:",inline" json:"additionalProperties,omitempty"`
 	}
 
@@ -72,6 +74,7 @@ func (cc *CredentialConfig) UnmarshalYAML(unmarshal func(interface{}) error) (er
 	cc.Type = aux.Type
 	cc.AllowedPipelines = aux.AllowedPipelines
 	cc.AllowedTrustedImages = aux.AllowedTrustedImages
+	cc.AllowedBranches = aux.AllowedBranches
 
 	// fix for map[interface{}]interface breaking json.marshal - see https://github.com/go-yaml/yaml/issues/139
 	cc.AdditionalProperties = cleanUpStringMap(aux.AdditionalProperties)
@@ -193,12 +196,25 @@ func IsAllowedTrustedImageForCredential(credential CredentialConfig, trustedImag
 	return isMatch
 }
 
-// FilterCredentialsByPipelinesAllowList returns the list of credentials filtered by the AllowedTrustedPipelines property on the credentials
+// FilterCredentialsByPipelinesAllowList returns the list of credentials filtered by the AllowedPipelines property on the credentials
 func FilterCredentialsByPipelinesAllowList(credentials []*CredentialConfig, fullRepositoryPath string) (filteredCredentials []*CredentialConfig) {
 
 	filteredCredentials = make([]*CredentialConfig, 0)
 	for _, c := range credentials {
 		if IsAllowedPipelineForCredential(*c, fullRepositoryPath) {
+			filteredCredentials = append(filteredCredentials, c)
+		}
+	}
+
+	return
+}
+
+// FilterCredentialsByBranchesAllowList returns the list of credentials filtered by the AllowedBranches property on the credentials
+func FilterCredentialsByBranchesAllowList(credentials []*CredentialConfig, branch string) (filteredCredentials []*CredentialConfig) {
+
+	filteredCredentials = make([]*CredentialConfig, 0)
+	for _, c := range credentials {
+		if IsAllowedBranchForCredential(*c, branch) {
 			filteredCredentials = append(filteredCredentials, c)
 		}
 	}
@@ -215,6 +231,19 @@ func IsAllowedPipelineForCredential(credential CredentialConfig, fullRepositoryP
 
 	pattern := fmt.Sprintf("^(%v)$", strings.TrimSpace(credential.AllowedPipelines))
 	isMatch, _ := regexp.Match(pattern, []byte(fullRepositoryPath))
+
+	return isMatch
+}
+
+// IsAllowedBranchForCredential returns true if AllowedBranches is empty or matches the build/release job branch
+func IsAllowedBranchForCredential(credential CredentialConfig, branch string) bool {
+
+	if credential.AllowedBranches == "" {
+		return true
+	}
+
+	pattern := fmt.Sprintf("^(%v)$", strings.TrimSpace(credential.AllowedBranches))
+	isMatch, _ := regexp.Match(pattern, []byte(branch))
 
 	return isMatch
 }
@@ -354,7 +383,7 @@ func FilterTrustedImages(trustedImages []*TrustedImageConfig, stages []*manifest
 }
 
 // FilterCredentials returns only credentials used by the trusted images
-func FilterCredentials(credentials []*CredentialConfig, trustedImages []*TrustedImageConfig, fullRepositoryPath string) []*CredentialConfig {
+func FilterCredentials(credentials []*CredentialConfig, trustedImages []*TrustedImageConfig, fullRepositoryPath, branch string) []*CredentialConfig {
 
 	filteredCredentials := []*CredentialConfig{}
 
@@ -365,6 +394,7 @@ func FilterCredentials(credentials []*CredentialConfig, trustedImages []*Trusted
 		for _, v := range credMap {
 			// filter by allow list
 			v = FilterCredentialsByPipelinesAllowList(v, fullRepositoryPath)
+			v = FilterCredentialsByBranchesAllowList(v, branch)
 			filteredCredentials = AddCredentialsIfNotPresent(filteredCredentials, v)
 		}
 	}

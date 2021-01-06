@@ -708,7 +708,7 @@ func TestFilterCredentials(t *testing.T) {
 		trustedImages := []*TrustedImageConfig{}
 
 		// act
-		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts", "master")
 
 		assert.Equal(t, 0, len(filteredCredentials))
 	})
@@ -737,7 +737,7 @@ func TestFilterCredentials(t *testing.T) {
 		}
 
 		// act
-		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts", "master")
 
 		assert.Equal(t, 0, len(filteredCredentials))
 	})
@@ -776,7 +776,7 @@ func TestFilterCredentials(t *testing.T) {
 		}
 
 		// act
-		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts", "master")
 
 		assert.Equal(t, 2, len(filteredCredentials))
 		assert.Equal(t, "gke-a", filteredCredentials[0].Name)
@@ -821,7 +821,7 @@ func TestFilterCredentials(t *testing.T) {
 		}
 
 		// act
-		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts", "master")
 
 		assert.Equal(t, 2, len(filteredCredentials))
 		assert.Equal(t, "gke-a", filteredCredentials[0].Name)
@@ -866,7 +866,7 @@ func TestFilterCredentials(t *testing.T) {
 		}
 
 		// act
-		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts", "master")
 
 		assert.Equal(t, 1, len(filteredCredentials))
 		assert.Equal(t, "gke-a", filteredCredentials[0].Name)
@@ -909,7 +909,7 @@ func TestFilterCredentials(t *testing.T) {
 		}
 
 		// act
-		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts")
+		filteredCredentials := FilterCredentials(credentials, trustedImages, "github.com/estafette/estafette-ci-contracts", "master")
 
 		assert.Equal(t, 1, len(filteredCredentials))
 		assert.Equal(t, "gke-b", filteredCredentials[0].Name)
