@@ -1,5 +1,7 @@
 package contracts
 
+import "strings"
+
 type Status string
 
 const (
@@ -47,3 +49,11 @@ const (
 	// TypeService indicates that a tail message is for a service container
 	LogTypeService LogType = "service"
 )
+
+func (l LogStatus) Equals(s Status) bool {
+	return strings.ToLower(string(l)) == strings.ToLower(string(s))
+}
+
+func (s Status) Equals(l LogStatus) bool {
+	return l.Equals(s)
+}
