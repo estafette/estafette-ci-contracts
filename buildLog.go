@@ -34,13 +34,14 @@ type BuildLogStep struct {
 
 // BuildLogStepDockerImage represents info about the docker image used for a step
 type BuildLogStepDockerImage struct {
-	Name         string        `json:"name"`
-	Tag          string        `json:"tag"`
-	IsPulled     bool          `json:"isPulled"`
-	ImageSize    int64         `json:"imageSize"`
-	PullDuration time.Duration `json:"pullDuration"`
-	Error        string        `json:"error,omitempty"`
-	IsTrusted    bool          `json:"isTrusted,omitempty"`
+	Name                   string        `json:"name"`
+	Tag                    string        `json:"tag"`
+	IsPulled               bool          `json:"isPulled"`
+	ImageSize              int64         `json:"imageSize"`
+	PullDuration           time.Duration `json:"pullDuration"`
+	Error                  string        `json:"error,omitempty"`
+	IsTrusted              bool          `json:"isTrusted,omitempty"`
+	HasInjectedCredentials bool          `json:"hasInjectedCredentials,omitempty"`
 }
 
 // BuildLogLine has low level log information
