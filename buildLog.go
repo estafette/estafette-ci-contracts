@@ -56,14 +56,14 @@ type BuildLogLine struct {
 type TailLogLine struct {
 	Step         string                   `json:"step"`
 	ParentStage  string                   `json:"parentStage,omitempty"`
-	Type         string                   `json:"type"`
+	Type         LogType                  `json:"type"`
 	Depth        int                      `json:"depth,omitempty"`
 	RunIndex     int                      `json:"runIndex,omitempty"`
 	LogLine      *BuildLogLine            `json:"logLine,omitempty"`
 	Image        *BuildLogStepDockerImage `json:"image,omitempty"`
 	Duration     *time.Duration           `json:"duration,omitempty"`
 	ExitCode     *int64                   `json:"exitCode,omitempty"`
-	Status       *string                  `json:"status,omitempty"`
+	Status       *LogStatus               `json:"status,omitempty"`
 	AutoInjected *bool                    `json:"autoInjected,omitempty"`
 }
 
