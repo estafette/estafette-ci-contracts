@@ -57,3 +57,37 @@ func (l LogStatus) Equals(s Status) bool {
 func (s Status) Equals(l LogStatus) bool {
 	return l.Equals(s)
 }
+
+func (l LogStatus) ToStatus() Status {
+	switch l {
+	case LogStatusSucceeded:
+		return StatusSucceeded
+	case LogStatusFailed:
+		return StatusFailed
+	case LogStatusCanceled:
+		return StatusCanceled
+	case LogStatusPending:
+		return StatusPending
+	case LogStatusRunning:
+		return StatusRunning
+	}
+
+	return StatusUnknown
+}
+
+func (s Status) ToLogStatus() LogStatus {
+	switch s {
+	case StatusPending:
+		return LogStatusPending
+	case StatusRunning:
+		return LogStatusRunning
+	case StatusSucceeded:
+		return LogStatusSucceeded
+	case StatusFailed:
+		return LogStatusFailed
+	case StatusCanceled:
+		return LogStatusCanceled
+	}
+
+	return LogStatusUnknown
+}
