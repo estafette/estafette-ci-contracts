@@ -13,6 +13,9 @@ manifestPreferences:
     - windowsservercore-1809
     - windowsservercore-1909
     - windowsservercore-ltsc2019
+  mtuPerOperatingSystem:
+    linux: 1460
+    windows: 1410
 credentials:
 - name: container-registry-extensions
   type: container-registry
