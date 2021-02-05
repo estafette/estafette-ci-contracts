@@ -20,11 +20,6 @@ type BuilderConfig struct {
 	Action *string `yaml:"action,omitempty" json:"action,omitempty"`
 	Track  *string `yaml:"track,omitempty" json:"track,omitempty"`
 
-	RegistryMirror  *string              `yaml:"registryMirror,omitempty" json:"registryMirror,omitempty"`
-	DockerDaemonMTU *string              `yaml:"dindMtu,omitempty" json:"dindMtu,omitempty"`
-	DockerDaemonBIP *string              `yaml:"dindBip,omitempty" json:"dindBip,omitempty"`
-	DockerNetwork   *DockerNetworkConfig `yaml:"dindNetwork,omitempty" json:"dindNetwork,omitempty"`
-
 	DockerConfig *DockerConfig `yaml:"dockerConfig,omitempty" json:"dockerConfig,omitempty"`
 
 	Manifest            *manifest.EstafetteManifest            `yaml:"manifest,omitempty" json:"manifest,omitempty"`
