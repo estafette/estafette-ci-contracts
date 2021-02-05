@@ -17,12 +17,15 @@ type ContainerRepositoryCredentialConfig struct {
 
 // BuilderConfig parameterizes a build/release job
 type BuilderConfig struct {
-	Action          *string              `yaml:"action,omitempty" json:"action,omitempty"`
-	Track           *string              `yaml:"track,omitempty" json:"track,omitempty"`
+	Action *string `yaml:"action,omitempty" json:"action,omitempty"`
+	Track  *string `yaml:"track,omitempty" json:"track,omitempty"`
+
 	RegistryMirror  *string              `yaml:"registryMirror,omitempty" json:"registryMirror,omitempty"`
 	DockerDaemonMTU *string              `yaml:"dindMtu,omitempty" json:"dindMtu,omitempty"`
 	DockerDaemonBIP *string              `yaml:"dindBip,omitempty" json:"dindBip,omitempty"`
 	DockerNetwork   *DockerNetworkConfig `yaml:"dindNetwork,omitempty" json:"dindNetwork,omitempty"`
+
+	DockerConfig *DockerConfig `yaml:"dockerConfig,omitempty" json:"dockerConfig,omitempty"`
 
 	Manifest            *manifest.EstafetteManifest            `yaml:"manifest,omitempty" json:"manifest,omitempty"`
 	ManifestPreferences *manifest.EstafetteManifestPreferences `yaml:"manifestPreferences,omitempty" json:"manifestPreferences,omitempty"`
@@ -127,6 +130,26 @@ type DockerNetworkConfig struct {
 	Name    string `json:"name"`
 	Subnet  string `json:"subnet"`
 	Gateway string `json:"gateway"`
+}
+
+type DockerRunType string
+
+const (
+	// DockerRunTypeUnknown indicates the value couldn't be mapped
+	DockerRunTypeUnknown DockerRunType = ""
+	// DockerRunTypeDinD represents docker-inside-docker
+	DockerRunTypeDinD DockerRunType = "dind"
+	// DockerRunTypeDoD represents docker-outside-docker
+	DockerRunTypeDoD DockerRunType = "dod"
+)
+
+// DockerConfig has configuration to configure docker in estafette-ci-builder
+type DockerConfig struct {
+	RunType        DockerRunType          `yaml:"runType,omitempty" json:"runType,omitempty"`
+	MTU            int                    `yaml:"mtu,omitempty" json:"mtu,omitempty"`
+	BIP            string                 `yaml:"bip,omitempty" json:"bip,omitempty"`
+	Networks       []*DockerNetworkConfig `yaml:"networks,omitempty" json:"networks,omitempty"`
+	RegistryMirror *string                `yaml:"registryMirror,omitempty" json:"registryMirror,omitempty"`
 }
 
 // BuildParamsConfig has config specific to builds
