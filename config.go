@@ -145,11 +145,11 @@ const (
 
 // DockerConfig has configuration to configure docker in estafette-ci-builder
 type DockerConfig struct {
-	RunType        DockerRunType          `yaml:"runType,omitempty" json:"runType,omitempty"`
-	MTU            int                    `yaml:"mtu,omitempty" json:"mtu,omitempty"`
-	BIP            string                 `yaml:"bip,omitempty" json:"bip,omitempty"`
-	Networks       []*DockerNetworkConfig `yaml:"networks,omitempty" json:"networks,omitempty"`
-	RegistryMirror *string                `yaml:"registryMirror,omitempty" json:"registryMirror,omitempty"`
+	RunType        DockerRunType         `yaml:"runType,omitempty" json:"runType,omitempty"`
+	MTU            int                   `yaml:"mtu,omitempty" json:"mtu,omitempty"`
+	BIP            string                `yaml:"bip,omitempty" json:"bip,omitempty"`
+	Networks       []DockerNetworkConfig `yaml:"networks,omitempty" json:"networks,omitempty"`
+	RegistryMirror string                `yaml:"registryMirror,omitempty" json:"registryMirror,omitempty"`
 }
 
 // BuildParamsConfig has config specific to builds
