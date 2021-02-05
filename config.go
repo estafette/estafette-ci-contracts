@@ -128,8 +128,10 @@ type CIServerConfig struct {
 // DockerNetworkConfig has settings for creating a user defined docker network to make service containers accessible by name from other containers
 type DockerNetworkConfig struct {
 	Name    string `json:"name"`
+	Driver  string `json:"driver"`
 	Subnet  string `json:"subnet"`
 	Gateway string `json:"gateway"`
+	Durable bool   `json:"durable"`
 }
 
 type DockerRunType string
