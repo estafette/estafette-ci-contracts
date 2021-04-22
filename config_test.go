@@ -133,11 +133,11 @@ func TestUnmarshalBuilderConfigFromYaml(t *testing.T) {
 		assert.Equal(t, 1, len(config.ManifestPreferences.LabelRegexes))
 		assert.Equal(t, "api|web|library|container", config.ManifestPreferences.LabelRegexes["type"])
 		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderOperatingSystems))
-		assert.Equal(t, "linux", config.ManifestPreferences.BuilderOperatingSystems[0])
-		assert.Equal(t, "windows", config.ManifestPreferences.BuilderOperatingSystems[1])
+		assert.Equal(t, manifest.OperatingSystemLinux, config.ManifestPreferences.BuilderOperatingSystems[0])
+		assert.Equal(t, manifest.OperatingSystemWindows, config.ManifestPreferences.BuilderOperatingSystems[1])
 		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem))
-		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["linux"]))
-		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["windows"]))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem[manifest.OperatingSystemLinux]))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem[manifest.OperatingSystemWindows]))
 	})
 }
 
@@ -314,11 +314,11 @@ func TestUnmarshalBuilderConfigFromJson(t *testing.T) {
 		assert.Equal(t, 1, len(config.ManifestPreferences.LabelRegexes))
 		assert.Equal(t, "api|web|library|container", config.ManifestPreferences.LabelRegexes["type"])
 		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderOperatingSystems))
-		assert.Equal(t, "linux", config.ManifestPreferences.BuilderOperatingSystems[0])
-		assert.Equal(t, "windows", config.ManifestPreferences.BuilderOperatingSystems[1])
+		assert.Equal(t, manifest.OperatingSystemLinux, config.ManifestPreferences.BuilderOperatingSystems[0])
+		assert.Equal(t, manifest.OperatingSystemWindows, config.ManifestPreferences.BuilderOperatingSystems[1])
 		assert.Equal(t, 2, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem))
-		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["linux"]))
-		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem["windows"]))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem[manifest.OperatingSystemLinux]))
+		assert.Equal(t, 3, len(config.ManifestPreferences.BuilderTracksPerOperatingSystem[manifest.OperatingSystemWindows]))
 	})
 }
 
