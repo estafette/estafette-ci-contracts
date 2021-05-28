@@ -10,12 +10,11 @@ import (
 // Bot represents a bot execution
 type Bot struct {
 	Name            string                    `json:"name"`
-	Event           string                    `json:"event,omitempty"`
 	ID              string                    `json:"id,omitempty"`
 	RepoSource      string                    `json:"repoSource,omitempty"`
 	RepoOwner       string                    `json:"repoOwner,omitempty"`
 	RepoName        string                    `json:"repoName,omitempty"`
-	BuildStatus     Status                    `json:"buildStatus,omitempty"`
+	BotStatus       Status                    `json:"botStatus,omitempty"`
 	Events          []manifest.EstafetteEvent `json:"triggerEvents,omitempty"`
 	InsertedAt      *time.Time                `json:"insertedAt,omitempty"`
 	StartedAt       *time.Time                `json:"startedAt,omitempty"`
