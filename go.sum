@@ -8,8 +8,10 @@ github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/estafette/estafette-ci-manifest v0.1.185-bots-support h1:Vx6loOohMNe8JGzh1oF381Edf+yQicAW1hdGP/0d31E=
-github.com/estafette/estafette-ci-manifest v0.1.185-bots-support/go.mod h1:WASkc3SCW6ghRv6IimS7e2dUJljwn+5izBXt+ATxp2Q=
+github.com/estafette/estafette-ci-manifest v0.1.186-bots-support h1:wwGbvpO6k7WEumHR6Ds08s/OvfCkezEl9gvpvQj8mkI=
+github.com/estafette/estafette-ci-manifest v0.1.186-bots-support/go.mod h1:WASkc3SCW6ghRv6IimS7e2dUJljwn+5izBXt+ATxp2Q=
+github.com/estafette/estafette-ci-manifest v0.1.187-bots-support h1:tqvdMCWQH/1B9lLeaWj2pwY6GmbTtRrGJwiR3jlO++E=
+github.com/estafette/estafette-ci-manifest v0.1.187-bots-support/go.mod h1:WASkc3SCW6ghRv6IimS7e2dUJljwn+5izBXt+ATxp2Q=
 github.com/estafette/estafette-foundation v0.0.54 h1:EYiKInvQg0B4wtvb6gAvQuMOEvf7Y3Td2+Fx2/asxGU=
 github.com/estafette/estafette-foundation v0.0.54/go.mod h1:3tosAek4nyGDaWbi9dz2jSb2Wa4dAtLw/7c7mDWwaLA=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
