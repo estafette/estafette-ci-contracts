@@ -32,6 +32,7 @@ type BuilderConfig struct {
 	CIServer      *CIServerConfig      `yaml:"ciServer,omitempty" json:"ciServer,omitempty"`
 	BuildParams   *BuildParamsConfig   `yaml:"buildParams,omitempty" json:"buildParams,omitempty"`
 	ReleaseParams *ReleaseParamsConfig `yaml:"releaseParams,omitempty" json:"releaseParams,omitempty"`
+	BotParams     *BotParamsConfig     `yaml:"botParams,omitempty" json:"botParams,omitempty"`
 
 	Git           *GitConfig            `yaml:"git,omitempty" json:"git,omitempty"`
 	BuildVersion  *BuildVersionConfig   `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
@@ -160,6 +161,12 @@ type ReleaseParamsConfig struct {
 	ReleaseID     int    `json:"releaseID"`
 	ReleaseAction string `json:"releaseAction,omitempty"`
 	TriggeredBy   string `json:"triggeredBy,omitempty"`
+}
+
+// BotParamsConfig has config specific to releases
+type BotParamsConfig struct {
+	BotName string `json:"botName"`
+	BotID   int    `json:"botID"`
 }
 
 // GetCredentialsByType returns all credentials of a certain type
