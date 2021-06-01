@@ -916,3 +916,86 @@ func TestFilterCredentials(t *testing.T) {
 		assert.Equal(t, "kubernetes-engine", filteredCredentials[0].Type)
 	})
 }
+
+func TestValidate(t *testing.T) {
+	t.Run("ReturnsNoErrorWhenBuildIsSetForJobTypeBuild", func(t *testing.T) {
+
+		config := BuilderConfig{
+			JobType: JobTypeBuild,
+			Build:   &Build{},
+		}
+
+		// act
+		err := config.Validate()
+
+		assert.Nil(t, err)
+	})
+
+	t.Run("ReturnsErrorWhenBuildIsNotSetForJobTypeBuild", func(t *testing.T) {
+
+		config := BuilderConfig{
+			JobType: JobTypeBuild,
+			Build:   nil,
+		}
+
+		// act
+		err := config.Validate()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "Build needs to be set for jobType build", err.Error())
+	})
+
+	t.Run("ReturnsNoErrorWhenReleaseIsSetForJobTypeRelease", func(t *testing.T) {
+
+		config := BuilderConfig{
+			JobType: JobTypeRelease,
+			Release: &Release{},
+		}
+
+		// act
+		err := config.Validate()
+
+		assert.Nil(t, err)
+	})
+
+	t.Run("ReturnsErrorWhenReleaseIsNotSetForJobTypeRelease", func(t *testing.T) {
+
+		config := BuilderConfig{
+			JobType: JobTypeRelease,
+			Release: nil,
+		}
+
+		// act
+		err := config.Validate()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "Release needs to be set for jobType release", err.Error())
+	})
+
+	t.Run("ReturnsNoErrorWhenBotIsSetForJobTypeBot", func(t *testing.T) {
+
+		config := BuilderConfig{
+			JobType: JobTypeBot,
+			Bot:     &Bot{},
+		}
+
+		// act
+		err := config.Validate()
+
+		assert.Nil(t, err)
+	})
+
+	t.Run("ReturnsErrorWhenBotIsNotSetForJobTypeBot", func(t *testing.T) {
+
+		config := BuilderConfig{
+			JobType: JobTypeBot,
+			Bot:     nil,
+		}
+
+		// act
+		err := config.Validate()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "Bot needs to be set for jobType bot", err.Error())
+	})
+}

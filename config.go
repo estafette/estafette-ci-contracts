@@ -1,6 +1,7 @@
 package contracts
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -14,6 +15,15 @@ type ContainerRepositoryCredentialConfig struct {
 	Username   string `yaml:"username"`
 	Password   string `yaml:"password"`
 }
+
+type JobType string
+
+const (
+	JobTypeUnknown JobType = ""
+	JobTypeBuild   JobType = "build"
+	JobTypeRelease JobType = "release"
+	JobTypeBot     JobType = "bot"
+)
 
 // BuilderConfig parameterizes a build/release job
 type BuilderConfig struct {
@@ -29,15 +39,43 @@ type BuilderConfig struct {
 	ReleaseName *string                    `yaml:"releaseName,omitempty" json:"releaseName,omitempty"`
 	Events      []*manifest.EstafetteEvent `yaml:"triggerEvents,omitempty" json:"triggerEvents,omitempty"`
 
-	CIServer      *CIServerConfig      `yaml:"ciServer,omitempty" json:"ciServer,omitempty"`
-	BuildParams   *BuildParamsConfig   `yaml:"buildParams,omitempty" json:"buildParams,omitempty"`
+	CIServer *CIServerConfig `yaml:"ciServer,omitempty" json:"ciServer,omitempty"`
+
+	JobType JobType `yaml:"jobType,omitempty" json:"jobType,omitempty"`
+	// deprecated
+	BuildParams *BuildParamsConfig `yaml:"buildParams,omitempty" json:"buildParams,omitempty"`
+	Build       *Build             `yaml:"build,omitempty" json:"build,omitempty"`
+	// deprecated
 	ReleaseParams *ReleaseParamsConfig `yaml:"releaseParams,omitempty" json:"releaseParams,omitempty"`
-	BotParams     *BotParamsConfig     `yaml:"botParams,omitempty" json:"botParams,omitempty"`
+	Release       *Release             `yaml:"release,omitempty" json:"release,omitempty"`
+	// deprecated
+	BotParams *BotParamsConfig `yaml:"botParams,omitempty" json:"botParams,omitempty"`
+	Bot       *Bot             `yaml:"bot,omitempty" json:"bot,omitempty"`
 
 	Git           *GitConfig            `yaml:"git,omitempty" json:"git,omitempty"`
 	BuildVersion  *BuildVersionConfig   `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
 	Credentials   []*CredentialConfig   `yaml:"credentials,omitempty" json:"credentials,omitempty"`
 	TrustedImages []*TrustedImageConfig `yaml:"trustedImages,omitempty" json:"trustedImages,omitempty"`
+}
+
+func (bc *BuilderConfig) Validate() (err error) {
+
+	switch bc.JobType {
+	case JobTypeBuild:
+		if bc.Build == nil {
+			return errors.New("Build needs to be set for jobType build")
+		}
+	case JobTypeRelease:
+		if bc.Release == nil {
+			return errors.New("Release needs to be set for jobType release")
+		}
+	case JobTypeBot:
+		if bc.Bot == nil {
+			return errors.New("Bot needs to be set for jobType bot")
+		}
+	}
+
+	return nil
 }
 
 // CredentialConfig is used to store credentials for every type of authenticated service you can use from docker registries, to kubernetes engine to, github apis, bitbucket;
