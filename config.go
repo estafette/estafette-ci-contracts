@@ -39,7 +39,7 @@ type BuilderConfig struct {
 	Manifest            *manifest.EstafetteManifest            `yaml:"manifest,omitempty" json:"manifest,omitempty"`
 	ManifestPreferences *manifest.EstafetteManifestPreferences `yaml:"manifestPreferences,omitempty" json:"manifestPreferences,omitempty"`
 	JobName             *string                                `yaml:"jobName,omitempty" json:"jobName,omitempty"`
-	Events              []*manifest.EstafetteEvent             `yaml:"triggerEvents,omitempty" json:"triggerEvents,omitempty"`
+	Events              []manifest.EstafetteEvent              `yaml:"triggerEvents,omitempty" json:"triggerEvents,omitempty"`
 	CIServer            *CIServerConfig                        `yaml:"ciServer,omitempty" json:"ciServer,omitempty"`
 	Stages              []*manifest.EstafetteStage             `yaml:"stages,omitempty" json:"stages,omitempty"`
 	Credentials         []*CredentialConfig                    `yaml:"credentials,omitempty" json:"credentials,omitempty"`
