@@ -27,52 +27,54 @@ const (
 
 // BuilderConfig parameterizes a build/release job
 type BuilderConfig struct {
-	Action *string `yaml:"action,omitempty" json:"action,omitempty"`
-	Track  *string `yaml:"track,omitempty" json:"track,omitempty"`
+	JobType JobType        `yaml:"jobType,omitempty" json:"jobType,omitempty"`
+	Build   *Build         `yaml:"build,omitempty" json:"build,omitempty"`
+	Release *Release       `yaml:"release,omitempty" json:"release,omitempty"`
+	Bot     *Bot           `yaml:"bot,omitempty" json:"bot,omitempty"`
+	Git     *GitConfig     `yaml:"git,omitempty" json:"git,omitempty"`
+	Version *VersionConfig `yaml:"version,omitempty" json:"version,omitempty"`
 
-	DockerConfig *DockerConfig `yaml:"dockerConfig,omitempty" json:"dockerConfig,omitempty"`
-
+	Track               *string                                `yaml:"track,omitempty" json:"track,omitempty"`
+	DockerConfig        *DockerConfig                          `yaml:"dockerConfig,omitempty" json:"dockerConfig,omitempty"`
 	Manifest            *manifest.EstafetteManifest            `yaml:"manifest,omitempty" json:"manifest,omitempty"`
 	ManifestPreferences *manifest.EstafetteManifestPreferences `yaml:"manifestPreferences,omitempty" json:"manifestPreferences,omitempty"`
+	JobName             *string                                `yaml:"jobName,omitempty" json:"jobName,omitempty"`
+	Events              []*manifest.EstafetteEvent             `yaml:"triggerEvents,omitempty" json:"triggerEvents,omitempty"`
+	CIServer            *CIServerConfig                        `yaml:"ciServer,omitempty" json:"ciServer,omitempty"`
+	Stages              []*manifest.EstafetteStage             `yaml:"stages,omitempty" json:"stages,omitempty"`
+	Credentials         []*CredentialConfig                    `yaml:"credentials,omitempty" json:"credentials,omitempty"`
+	TrustedImages       []*TrustedImageConfig                  `yaml:"trustedImages,omitempty" json:"trustedImages,omitempty"`
 
-	JobName     *string                    `yaml:"jobName,omitempty" json:"jobName,omitempty"`
-	ReleaseName *string                    `yaml:"releaseName,omitempty" json:"releaseName,omitempty"`
-	Events      []*manifest.EstafetteEvent `yaml:"triggerEvents,omitempty" json:"triggerEvents,omitempty"`
-
-	CIServer *CIServerConfig `yaml:"ciServer,omitempty" json:"ciServer,omitempty"`
-
-	JobType JobType `yaml:"jobType,omitempty" json:"jobType,omitempty"`
 	// deprecated
-	BuildParams *BuildParamsConfig `yaml:"buildParams,omitempty" json:"buildParams,omitempty"`
-	Build       *Build             `yaml:"build,omitempty" json:"build,omitempty"`
-	// deprecated
+	BuildVersion  *VersionConfig       `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
+	BotParams     *BotParamsConfig     `yaml:"botParams,omitempty" json:"botParams,omitempty"`
 	ReleaseParams *ReleaseParamsConfig `yaml:"releaseParams,omitempty" json:"releaseParams,omitempty"`
-	Release       *Release             `yaml:"release,omitempty" json:"release,omitempty"`
-	// deprecated
-	BotParams *BotParamsConfig `yaml:"botParams,omitempty" json:"botParams,omitempty"`
-	Bot       *Bot             `yaml:"bot,omitempty" json:"bot,omitempty"`
-
-	Git           *GitConfig                 `yaml:"git,omitempty" json:"git,omitempty"`
-	BuildVersion  *BuildVersionConfig        `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
-	Stages        []*manifest.EstafetteStage `yaml:"stages,omitempty" json:"stages,omitempty"`
-	Credentials   []*CredentialConfig        `yaml:"credentials,omitempty" json:"credentials,omitempty"`
-	TrustedImages []*TrustedImageConfig      `yaml:"trustedImages,omitempty" json:"trustedImages,omitempty"`
+	BuildParams   *BuildParamsConfig   `yaml:"buildParams,omitempty" json:"buildParams,omitempty"`
+	ReleaseName   *string              `yaml:"releaseName,omitempty" json:"releaseName,omitempty"`
+	Action        *string              `yaml:"action,omitempty" json:"action,omitempty"`
 }
 
 func (bc *BuilderConfig) Validate() (err error) {
 
+	if bc.Git == nil {
+		return errors.New("git needs to be set")
+	}
+	if bc.Version == nil {
+		return errors.New("version needs to be set")
+	}
+
 	switch bc.JobType {
 	case JobTypeBuild:
 		if bc.Build == nil {
-			return errors.New("Build needs to be set for jobType build")
+			return errors.New("build needs to be set for jobType build")
 		}
 	case JobTypeRelease:
 		if bc.Release == nil {
-			return errors.New("Release needs to be set for jobType release")
+			return errors.New("release needs to be set for jobType release")
 		}
 	case JobTypeBot:
 		if bc.Bot == nil {
-			return errors.New("Bot needs to be set for jobType bot")
+			return errors.New("bot needs to be set for jobType bot")
 		}
 	}
 
@@ -139,8 +141,8 @@ type GitConfig struct {
 	RepoRevision string `json:"repoRevision"`
 }
 
-// BuildVersionConfig contains all information regarding the version number to build or release
-type BuildVersionConfig struct {
+// VersionConfig contains all information regarding the version number to build or release
+type VersionConfig struct {
 	Version                 string  `json:"version"`
 	Major                   *int    `json:"major,omitempty"`
 	Minor                   *int    `json:"minor,omitempty"`

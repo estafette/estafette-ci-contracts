@@ -920,10 +920,9 @@ func TestFilterCredentials(t *testing.T) {
 func TestValidate(t *testing.T) {
 	t.Run("ReturnsNoErrorWhenBuildIsSetForJobTypeBuild", func(t *testing.T) {
 
-		config := BuilderConfig{
-			JobType: JobTypeBuild,
-			Build:   &Build{},
-		}
+		config := getBuilderConfig()
+		config.JobType = JobTypeBuild
+		config.Build = &Build{}
 
 		// act
 		err := config.Validate()
@@ -933,24 +932,22 @@ func TestValidate(t *testing.T) {
 
 	t.Run("ReturnsErrorWhenBuildIsNotSetForJobTypeBuild", func(t *testing.T) {
 
-		config := BuilderConfig{
-			JobType: JobTypeBuild,
-			Build:   nil,
-		}
+		config := getBuilderConfig()
+		config.JobType = JobTypeBuild
+		config.Build = nil
 
 		// act
 		err := config.Validate()
 
 		assert.NotNil(t, err)
-		assert.Equal(t, "Build needs to be set for jobType build", err.Error())
+		assert.Equal(t, "build needs to be set for jobType build", err.Error())
 	})
 
 	t.Run("ReturnsNoErrorWhenReleaseIsSetForJobTypeRelease", func(t *testing.T) {
 
-		config := BuilderConfig{
-			JobType: JobTypeRelease,
-			Release: &Release{},
-		}
+		config := getBuilderConfig()
+		config.JobType = JobTypeRelease
+		config.Release = &Release{}
 
 		// act
 		err := config.Validate()
@@ -960,24 +957,22 @@ func TestValidate(t *testing.T) {
 
 	t.Run("ReturnsErrorWhenReleaseIsNotSetForJobTypeRelease", func(t *testing.T) {
 
-		config := BuilderConfig{
-			JobType: JobTypeRelease,
-			Release: nil,
-		}
+		config := getBuilderConfig()
+		config.JobType = JobTypeRelease
+		config.Release = nil
 
 		// act
 		err := config.Validate()
 
 		assert.NotNil(t, err)
-		assert.Equal(t, "Release needs to be set for jobType release", err.Error())
+		assert.Equal(t, "release needs to be set for jobType release", err.Error())
 	})
 
 	t.Run("ReturnsNoErrorWhenBotIsSetForJobTypeBot", func(t *testing.T) {
 
-		config := BuilderConfig{
-			JobType: JobTypeBot,
-			Bot:     &Bot{},
-		}
+		config := getBuilderConfig()
+		config.JobType = JobTypeBot
+		config.Bot = &Bot{}
 
 		// act
 		err := config.Validate()
@@ -987,15 +982,72 @@ func TestValidate(t *testing.T) {
 
 	t.Run("ReturnsErrorWhenBotIsNotSetForJobTypeBot", func(t *testing.T) {
 
-		config := BuilderConfig{
-			JobType: JobTypeBot,
-			Bot:     nil,
-		}
+		config := getBuilderConfig()
+		config.JobType = JobTypeBot
+		config.Bot = nil
 
 		// act
 		err := config.Validate()
 
 		assert.NotNil(t, err)
-		assert.Equal(t, "Bot needs to be set for jobType bot", err.Error())
+		assert.Equal(t, "bot needs to be set for jobType bot", err.Error())
 	})
+
+	t.Run("ReturnsNoErrorWhenGitIsSet", func(t *testing.T) {
+
+		config := getBuilderConfig()
+		config.Git = &GitConfig{}
+
+		// act
+		err := config.Validate()
+
+		assert.Nil(t, err)
+	})
+
+	t.Run("ReturnsErrorWhenGitIsNotSet", func(t *testing.T) {
+
+		config := getBuilderConfig()
+		config.Git = nil
+
+		// act
+		err := config.Validate()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "git needs to be set", err.Error())
+	})
+
+	t.Run("ReturnsNoErrorWhenBuildVersionIsSet", func(t *testing.T) {
+
+		config := getBuilderConfig()
+		config.Version = &VersionConfig{}
+
+		// act
+		err := config.Validate()
+
+		assert.Nil(t, err)
+	})
+
+	t.Run("ReturnsErrorWhenBuildVersionIsNotSet", func(t *testing.T) {
+
+		config := getBuilderConfig()
+		config.Version = nil
+
+		// act
+		err := config.Validate()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "version needs to be set", err.Error())
+	})
+
+}
+
+func getBuilderConfig() BuilderConfig {
+	return BuilderConfig{
+		JobType: JobTypeBot,
+		Git:     &GitConfig{},
+		Version: &VersionConfig{},
+		Build:   &Build{},
+		Release: &Release{},
+		Bot:     &Bot{},
+	}
 }
