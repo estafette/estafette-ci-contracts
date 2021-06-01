@@ -52,10 +52,11 @@ type BuilderConfig struct {
 	BotParams *BotParamsConfig `yaml:"botParams,omitempty" json:"botParams,omitempty"`
 	Bot       *Bot             `yaml:"bot,omitempty" json:"bot,omitempty"`
 
-	Git           *GitConfig            `yaml:"git,omitempty" json:"git,omitempty"`
-	BuildVersion  *BuildVersionConfig   `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
-	Credentials   []*CredentialConfig   `yaml:"credentials,omitempty" json:"credentials,omitempty"`
-	TrustedImages []*TrustedImageConfig `yaml:"trustedImages,omitempty" json:"trustedImages,omitempty"`
+	Git           *GitConfig                 `yaml:"git,omitempty" json:"git,omitempty"`
+	BuildVersion  *BuildVersionConfig        `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
+	Stages        []*manifest.EstafetteStage `yaml:"stages,omitempty" json:"stages,omitempty"`
+	Credentials   []*CredentialConfig        `yaml:"credentials,omitempty" json:"credentials,omitempty"`
+	TrustedImages []*TrustedImageConfig      `yaml:"trustedImages,omitempty" json:"trustedImages,omitempty"`
 }
 
 func (bc *BuilderConfig) Validate() (err error) {
