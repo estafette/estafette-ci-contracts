@@ -1016,7 +1016,7 @@ func TestValidate(t *testing.T) {
 		assert.Equal(t, "git needs to be set", err.Error())
 	})
 
-	t.Run("ReturnsNoErrorWhenBuildVersionIsSet", func(t *testing.T) {
+	t.Run("ReturnsNoErrorWhenVersionIsSet", func(t *testing.T) {
 
 		config := getBuilderConfig()
 		config.Version = &VersionConfig{}
@@ -1027,7 +1027,7 @@ func TestValidate(t *testing.T) {
 		assert.Nil(t, err)
 	})
 
-	t.Run("ReturnsErrorWhenBuildVersionIsNotSet", func(t *testing.T) {
+	t.Run("ReturnsErrorWhenVersionIsNotSet", func(t *testing.T) {
 
 		config := getBuilderConfig()
 		config.Version = nil
@@ -1039,15 +1039,38 @@ func TestValidate(t *testing.T) {
 		assert.Equal(t, "version needs to be set", err.Error())
 	})
 
+	t.Run("ReturnsNoErrorWhenManifestIsSet", func(t *testing.T) {
+
+		config := getBuilderConfig()
+		config.Manifest = &manifest.EstafetteManifest{}
+
+		// act
+		err := config.Validate()
+
+		assert.Nil(t, err)
+	})
+
+	t.Run("ReturnsErrorWhenManifestIsNotSet", func(t *testing.T) {
+
+		config := getBuilderConfig()
+		config.Manifest = nil
+
+		// act
+		err := config.Validate()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "manifest needs to be set", err.Error())
+	})
 }
 
 func getBuilderConfig() BuilderConfig {
 	return BuilderConfig{
-		JobType: JobTypeBot,
-		Git:     &GitConfig{},
-		Version: &VersionConfig{},
-		Build:   &Build{},
-		Release: &Release{},
-		Bot:     &Bot{},
+		JobType:  JobTypeBot,
+		Git:      &GitConfig{},
+		Version:  &VersionConfig{},
+		Manifest: &manifest.EstafetteManifest{},
+		Build:    &Build{},
+		Release:  &Release{},
+		Bot:      &Bot{},
 	}
 }

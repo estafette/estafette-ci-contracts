@@ -62,6 +62,9 @@ func (bc *BuilderConfig) Validate() (err error) {
 	if bc.Version == nil {
 		return errors.New("version needs to be set")
 	}
+	if bc.Manifest == nil {
+		return errors.New("manifest needs to be set")
+	}
 
 	switch bc.JobType {
 	case JobTypeBuild:
