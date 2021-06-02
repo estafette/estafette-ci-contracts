@@ -57,3 +57,20 @@ func (bc *EstafetteCiBuilderEvent) GetStatus() Status {
 
 	return StatusUnknown
 }
+
+func (bc *EstafetteCiBuilderEvent) SetStatus(status Status) {
+	switch bc.JobType {
+	case JobTypeBuild:
+		if bc.Build != nil {
+			bc.Build.BuildStatus = status
+		}
+	case JobTypeRelease:
+		if bc.Release != nil {
+			bc.Release.ReleaseStatus = status
+		}
+	case JobTypeBot:
+		if bc.Bot != nil {
+			bc.Bot.BotStatus = status
+		}
+	}
+}
