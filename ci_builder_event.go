@@ -13,16 +13,6 @@ type EstafetteCiBuilderEvent struct {
 	Release *Release   `json:"release,omitempty"`
 	Bot     *Bot       `json:"bot,omitempty"`
 	Git     *GitConfig `json:"git,omitempty"`
-
-	// deprecated
-	RepoSource   string `json:"repo_source,omitempty"`
-	RepoOwner    string `json:"repo_owner,omitempty"`
-	RepoName     string `json:"repo_name,omitempty"`
-	RepoBranch   string `json:"repo_branch,omitempty"`
-	RepoRevision string `json:"repo_revision,omitempty"`
-	ReleaseID    string `json:"release_id,omitempty"`
-	BuildID      string `json:"build_id,omitempty"`
-	BuildStatus  Status `json:"build_status,omitempty"`
 }
 
 func (bc *EstafetteCiBuilderEvent) Validate() (err error) {
