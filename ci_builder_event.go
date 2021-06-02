@@ -1,6 +1,8 @@
 package contracts
 
-import "errors"
+import (
+	"errors"
+)
 
 type EstafetteCiBuilderEvent struct {
 	JobType JobType `json:"jobType,omitempty"`
@@ -45,4 +47,23 @@ func (bc *EstafetteCiBuilderEvent) Validate() (err error) {
 	}
 
 	return nil
+}
+
+func (bc *EstafetteCiBuilderEvent) GetStatus() Status {
+	switch bc.JobType {
+	case JobTypeBuild:
+		if bc.Build != nil {
+			return bc.Build.BuildStatus
+		}
+	case JobTypeRelease:
+		if bc.Release != nil {
+			return bc.Release.ReleaseStatus
+		}
+	case JobTypeBot:
+		if bc.Bot != nil {
+			return bc.Bot.BotStatus
+		}
+	}
+
+	return StatusUnknown
 }
