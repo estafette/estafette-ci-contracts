@@ -240,7 +240,7 @@ func TestUnmarshalBuilderConfigFromJson(t *testing.T) {
 		assert.Equal(t, "slack-webhook", config.TrustedImages[4].InjectedCredentialTypes[0])
 	})
 
-	t.Run("ReturnsAction", func(t *testing.T) {
+	t.Run("ReturnsJobType", func(t *testing.T) {
 
 		bytes, _ := ioutil.ReadFile("config-builder-in-builder-test.json")
 		var config BuilderConfig
@@ -248,7 +248,7 @@ func TestUnmarshalBuilderConfigFromJson(t *testing.T) {
 		// act
 		_ = json.Unmarshal(bytes, &config)
 
-		assert.Equal(t, "build", *config.Action)
+		assert.Equal(t, JobTypeBuild, config.JobType)
 	})
 
 	t.Run("ReturnsTrack", func(t *testing.T) {
@@ -277,7 +277,7 @@ func TestUnmarshalBuilderConfigFromJson(t *testing.T) {
 		assert.Equal(t, "3adf11c158811dbf0b94ca5bdbbdae79fffe7852", config.Git.RepoRevision)
 	})
 
-	t.Run("ReturnsBuildVersionConfig", func(t *testing.T) {
+	t.Run("ReturnsVersionConfig", func(t *testing.T) {
 
 		bytes, _ := ioutil.ReadFile("config-builder-in-builder-test.json")
 		var config BuilderConfig
@@ -285,11 +285,11 @@ func TestUnmarshalBuilderConfigFromJson(t *testing.T) {
 		// act
 		_ = json.Unmarshal(bytes, &config)
 
-		assert.Equal(t, "0.1.67-rc.1", config.BuildVersion.Version)
-		assert.Equal(t, 0, *config.BuildVersion.Major)
-		assert.Equal(t, 1, *config.BuildVersion.Minor)
-		assert.Equal(t, "67-rc.1", *config.BuildVersion.Patch)
-		assert.Equal(t, 67, *config.BuildVersion.AutoIncrement)
+		assert.Equal(t, "0.1.67-rc.1", config.Version.Version)
+		assert.Equal(t, 0, *config.Version.Major)
+		assert.Equal(t, 1, *config.Version.Minor)
+		assert.Equal(t, "67-rc.1", *config.Version.Patch)
+		assert.Equal(t, 67, *config.Version.AutoIncrement)
 	})
 
 	t.Run("ReturnsManifestPreferences", func(t *testing.T) {
@@ -1061,6 +1061,315 @@ func TestValidate(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.Equal(t, "manifest needs to be set", err.Error())
 	})
+}
+
+func TestUnmarshalBuilderConfig(t *testing.T) {
+	t.Run("UnmarshalBuilderConfig", func(t *testing.T) {
+
+		jsonData := `
+		{
+			"jobType":"build",
+			"track":"stable",
+			"dockerConfig":{
+				 "runType":"dind",
+				 "mtu":1460,
+				 "bip":"192.168.1.1/24",
+				 "networks":[
+						{
+							 "name":"estafette",
+							 "driver":"default",
+							 "subnet":"192.168.2.1/24",
+							 "gateway":"192.168.2.1",
+							 "durable":false
+						}
+				 ],
+				 "registryMirror":"https://mirror.gcr.io"
+			},
+			"manifest":{
+				 "Builder":{
+						"Track":"stable",
+						"OperatingSystem":"linux",
+						"StorageMedium":"",
+						"BuilderType":"docker"
+				 },
+				 "Stages":[
+						{
+							 "Name":"injected-before",
+							 "ContainerImage":"",
+							 "Shell":"",
+							 "WorkingDirectory":"",
+							 "Commands":null,
+							 "RunCommandsInForeground":false,
+							 "When":"status == 'succeeded'",
+							 "EnvVars":null,
+							 "AutoInjected":true,
+							 "Retries":0,
+							 "ParallelStages":[
+									{
+										 "Name":"git-clone",
+										 "ContainerImage":"extensions/git-clone:stable",
+										 "Shell":"/bin/sh",
+										 "WorkingDirectory":"/estafette-work",
+										 "Commands":null,
+										 "RunCommandsInForeground":false,
+										 "When":"status == 'succeeded'",
+										 "EnvVars":null,
+										 "AutoInjected":true,
+										 "Retries":0,
+										 "ParallelStages":null,
+										 "Services":null,
+										 "CustomProperties":null
+									},
+									{
+										 "Name":"set-pending-build-status",
+										 "ContainerImage":"extensions/bitbucket-status:stable",
+										 "Shell":"/bin/sh",
+										 "WorkingDirectory":"/estafette-work",
+										 "Commands":null,
+										 "RunCommandsInForeground":false,
+										 "When":"status == 'succeeded'",
+										 "EnvVars":null,
+										 "AutoInjected":true,
+										 "Retries":0,
+										 "ParallelStages":null,
+										 "Services":null,
+										 "CustomProperties":{
+												"status":"pending"
+										 }
+									},
+									{
+										 "Name":"envvars",
+										 "ContainerImage":"extensions/envvars:stable",
+										 "Shell":"/bin/sh",
+										 "WorkingDirectory":"/estafette-work",
+										 "Commands":null,
+										 "RunCommandsInForeground":false,
+										 "When":"status == 'succeeded'",
+										 "EnvVars":null,
+										 "AutoInjected":true,
+										 "Retries":0,
+										 "ParallelStages":null,
+										 "Services":null,
+										 "CustomProperties":{
+												
+										 }
+									}
+							 ],
+							 "Services":null,
+							 "CustomProperties":null
+						},
+						{
+							 "Name":"injected-after",
+							 "ContainerImage":"",
+							 "Shell":"",
+							 "WorkingDirectory":"",
+							 "Commands":null,
+							 "RunCommandsInForeground":false,
+							 "When":"status == 'succeeded' || status == 'failed'",
+							 "EnvVars":null,
+							 "AutoInjected":true,
+							 "Retries":0,
+							 "ParallelStages":[
+									{
+										 "Name":"set-build-status",
+										 "ContainerImage":"extensions/bitbucket-status:stable",
+										 "Shell":"/bin/sh",
+										 "WorkingDirectory":"/estafette-work",
+										 "Commands":null,
+										 "RunCommandsInForeground":false,
+										 "When":"status == 'succeeded' || status == 'failed'",
+										 "EnvVars":null,
+										 "AutoInjected":true,
+										 "Retries":0,
+										 "ParallelStages":null,
+										 "Services":null,
+										 "CustomProperties":null
+									}
+							 ],
+							 "Services":null,
+							 "CustomProperties":null
+						}
+				 ]
+			},
+			"stages":[
+				{
+					 "Name":"injected-before",
+					 "ContainerImage":"",
+					 "Shell":"",
+					 "WorkingDirectory":"",
+					 "Commands":null,
+					 "RunCommandsInForeground":false,
+					 "When":"status == 'succeeded'",
+					 "EnvVars":null,
+					 "AutoInjected":true,
+					 "Retries":0,
+					 "ParallelStages":[
+							{
+								 "Name":"git-clone",
+								 "ContainerImage":"extensions/git-clone:stable",
+								 "Shell":"/bin/sh",
+								 "WorkingDirectory":"/estafette-work",
+								 "Commands":null,
+								 "RunCommandsInForeground":false,
+								 "When":"status == 'succeeded'",
+								 "EnvVars":null,
+								 "AutoInjected":true,
+								 "Retries":0,
+								 "ParallelStages":null,
+								 "Services":null,
+								 "CustomProperties":null
+							},
+							{
+								 "Name":"set-pending-build-status",
+								 "ContainerImage":"extensions/bitbucket-status:stable",
+								 "Shell":"/bin/sh",
+								 "WorkingDirectory":"/estafette-work",
+								 "Commands":null,
+								 "RunCommandsInForeground":false,
+								 "When":"status == 'succeeded'",
+								 "EnvVars":null,
+								 "AutoInjected":true,
+								 "Retries":0,
+								 "ParallelStages":null,
+								 "Services":null,
+								 "CustomProperties":{
+										"status":"pending"
+								 }
+							},
+							{
+								 "Name":"envvars",
+								 "ContainerImage":"extensions/envvars:stable",
+								 "Shell":"/bin/sh",
+								 "WorkingDirectory":"/estafette-work",
+								 "Commands":null,
+								 "RunCommandsInForeground":false,
+								 "When":"status == 'succeeded'",
+								 "EnvVars":null,
+								 "AutoInjected":true,
+								 "Retries":0,
+								 "ParallelStages":null,
+								 "Services":null,
+								 "CustomProperties":{
+										
+								 }
+							}
+					 ],
+					 "Services":null,
+					 "CustomProperties":null
+				},
+				{
+					 "Name":"injected-after",
+					 "ContainerImage":"",
+					 "Shell":"",
+					 "WorkingDirectory":"",
+					 "Commands":null,
+					 "RunCommandsInForeground":false,
+					 "When":"status == 'succeeded' || status == 'failed'",
+					 "EnvVars":null,
+					 "AutoInjected":true,
+					 "Retries":0,
+					 "ParallelStages":[
+							{
+								 "Name":"set-build-status",
+								 "ContainerImage":"extensions/bitbucket-status:stable",
+								 "Shell":"/bin/sh",
+								 "WorkingDirectory":"/estafette-work",
+								 "Commands":null,
+								 "RunCommandsInForeground":false,
+								 "When":"status == 'succeeded' || status == 'failed'",
+								 "EnvVars":null,
+								 "AutoInjected":true,
+								 "Retries":0,
+								 "ParallelStages":null,
+								 "Services":null,
+								 "CustomProperties":null
+							}
+					 ],
+					 "Services":null,
+					 "CustomProperties":null
+				}
+		 	],
+			"jobName":"build-something-663703472164241425",
+			"triggerEvents":[
+				 {
+						"fired":true,
+						"git":{
+							 "event":"push",
+							 "repository":"bitbucket.org/org/something",
+							 "branch":"master"
+						}
+				 }
+			],
+			"ciServer":{
+				 "baseUrl":"https://ci.estafette.io/",
+				 "builderEventsUrl":"https://ci.estafette.io/api/commands",
+				 "postLogsUrl":"https://ci.estafette.io/api/pipelines/bitbucket.org/xivart/edge/builds/663703472164241425/logs",
+				 "jwt":"***"
+			},
+			"build":{
+				 "ID":"663703472164241425"
+			},
+			"git":{
+				 "repoSource":"bitbucket.org",
+				 "repoOwner":"xivart",
+				 "repoName":"edge",
+				 "repoBranch":"master",
+				 "repoRevision":"886de85bb620a8217a884cb18a34ad15423a26e9"
+			},
+			"version":{
+				 "version":"1.0.7456",
+				 "major":1,
+				 "minor":0,
+				 "patch":"7456",
+				 "label":"master",
+				 "autoincrement":7456,
+				 "currentCounter":7456,
+				 "maxCounter":7456,
+				 "maxCounterCurrentBranch":7456
+			},
+			"credentials":[
+				 {
+						"name":"bitbucket-api-token",
+						"type":"bitbucket-api-token",
+						"additionalProperties":{
+							 "token":"estafette.secret(***)"
+						}
+				 }
+			],
+			"trustedImages":[
+				 {
+						"path":"extensions/git-clone",
+						"runPrivileged":false,
+						"runDocker":false,
+						"allowCommands":false,
+						"injectedCredentialTypes":[
+							 "bitbucket-api-token",
+							 "github-api-token",
+							 "cloudsource-api-token"
+						]
+				 },
+				 {
+						"path":"extensions/bitbucket-status",
+						"runPrivileged":false,
+						"runDocker":false,
+						"allowCommands":false,
+						"injectedCredentialTypes":[
+							 "bitbucket-api-token"
+						]
+				 }
+			]
+	 }`
+
+		//act
+		var config BuilderConfig
+		err := json.Unmarshal([]byte(jsonData), &config)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "1.0.7456", config.Version.Version)
+		assert.Equal(t, "663703472164241425", config.Build.ID)
+		assert.Equal(t, JobTypeBuild, config.JobType)
+	})
+
 }
 
 func getBuilderConfig() BuilderConfig {

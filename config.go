@@ -44,14 +44,6 @@ type BuilderConfig struct {
 	Stages              []*manifest.EstafetteStage             `yaml:"stages,omitempty" json:"stages,omitempty"`
 	Credentials         []*CredentialConfig                    `yaml:"credentials,omitempty" json:"credentials,omitempty"`
 	TrustedImages       []*TrustedImageConfig                  `yaml:"trustedImages,omitempty" json:"trustedImages,omitempty"`
-
-	// deprecated
-	BuildVersion  *VersionConfig       `yaml:"buildVersion,omitempty" json:"buildVersion,omitempty"`
-	BotParams     *BotParamsConfig     `yaml:"botParams,omitempty" json:"botParams,omitempty"`
-	ReleaseParams *ReleaseParamsConfig `yaml:"releaseParams,omitempty" json:"releaseParams,omitempty"`
-	BuildParams   *BuildParamsConfig   `yaml:"buildParams,omitempty" json:"buildParams,omitempty"`
-	ReleaseName   *string              `yaml:"releaseName,omitempty" json:"releaseName,omitempty"`
-	Action        *string              `yaml:"action,omitempty" json:"action,omitempty"`
 }
 
 func (bc *BuilderConfig) Validate() (err error) {

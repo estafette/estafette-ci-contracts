@@ -1,5 +1,5 @@
 {
-  "action": "build",
+  "jobType": "build",
   "track": "dev",
   "manifestPreferences": {
     "labelRegexes":{
@@ -18,7 +18,7 @@
     "repoBranch": "master",
     "repoRevision": "3adf11c158811dbf0b94ca5bdbbdae79fffe7852"
   },
-  "buildVersion": {
+  "version": {
     "version": "0.1.67-rc.1",
     "major": 0,
     "minor": 1,
