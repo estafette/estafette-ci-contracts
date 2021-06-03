@@ -4,19 +4,19 @@ import (
 	"errors"
 )
 
-type BuildEvent string
+type BuildEventType string
 
 const (
-	BuildEventUnknown      BuildEvent = ""
-	BuildEventUpdateStatus BuildEvent = "updateStatus"
-	BuildEventClean        BuildEvent = "clean"
+	BuildEventTypeUnknown      BuildEventType = ""
+	BuildEventTypeUpdateStatus BuildEventType = "updateStatus"
+	BuildEventTypeClean        BuildEventType = "clean"
 )
 
 type EstafetteCiBuilderEvent struct {
-	BuildEvent BuildEvent `json:"buildEvent,omitempty"`
-	JobType    JobType    `json:"jobType,omitempty"`
-	JobName    string     `json:"job_name"`
-	PodName    string     `json:"pod_name,omitempty"`
+	BuildEventType BuildEventType `json:"buildEventType,omitempty"`
+	JobType        JobType        `json:"jobType,omitempty"`
+	JobName        string         `json:"job_name"`
+	PodName        string         `json:"pod_name,omitempty"`
 
 	Build   *Build     `json:"build,omitempty"`
 	Release *Release   `json:"release,omitempty"`
