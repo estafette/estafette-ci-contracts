@@ -7,13 +7,9 @@ import (
 type BuildEvent string
 
 const (
-	BuildEventUnknown    BuildEvent = ""
-	BuildEventNoManifest BuildEvent = "builder:nomanifest"
-	BuildEventRunning    BuildEvent = "builder:running"
-	BuildEventSucceeded  BuildEvent = "builder:succeeded"
-	BuildEventFailed     BuildEvent = "builder:failed"
-	BuildEventCanceled   BuildEvent = "builder:canceled"
-	BuildEventClean      BuildEvent = "builder:clean"
+	BuildEventUnknown      BuildEvent = ""
+	BuildEventUpdateStatus BuildEvent = "updateStatus"
+	BuildEventClean        BuildEvent = "clean"
 )
 
 type EstafetteCiBuilderEvent struct {
