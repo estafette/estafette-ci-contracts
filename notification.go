@@ -1,6 +1,7 @@
 package contracts
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -53,38 +54,6 @@ type NotificationRecord struct {
 	Organizations []*Organization `json:"organizations,omitempty"`
 }
 
-func (nr *NotificationRecord) GetLinkDetail() interface{} {
-	switch nr.LinkType {
-	case NotificationLinkTypePipeline:
-		return nr.PipelineDetail
-	case NotificationLinkTypeContainer:
-		return nr.ContainerDetail
-	}
-
-	return nil
-}
-
-func (nr *NotificationRecord) SetLinkDetail(linkDetail interface{}) (err error) {
-	if linkDetail == nil {
-		return
-	}
-
-	var ok bool
-
-	switch nr.LinkType {
-	case NotificationLinkTypePipeline:
-		if nr.PipelineDetail, ok = linkDetail.(*PipelineLinkDetail); !ok {
-			return fmt.Errorf("LinkDetail for NotificationRecord %v of type %v is not of type PipelineLinkDetail", nr.LinkID, nr.LinkType)
-		}
-	case NotificationLinkTypeContainer:
-		if nr.ContainerDetail, ok = linkDetail.(*ContainerLinkDetail); !ok {
-			return fmt.Errorf("LinkDetail for NotificationRecord %v of type %v is not of type ContainerLinkDetail", nr.LinkID, nr.LinkType)
-		}
-	}
-
-	return nil
-}
-
 type PipelineLinkDetail struct {
 	Branch   string `json:"branch,omitempty"`
 	Revision string `json:"revision"`
@@ -95,4 +64,66 @@ type PipelineLinkDetail struct {
 type ContainerLinkDetail struct {
 	Tag         string `json:"tag,omitempty"`
 	PublicImage bool   `json:"publicImage,omitempty"`
+}
+
+func (nr *NotificationRecord) GetLinkDetail() ([]byte, error) {
+	switch nr.LinkType {
+	case NotificationLinkTypePipeline:
+		return json.Marshal(nr.PipelineDetail)
+	case NotificationLinkTypeContainer:
+		return json.Marshal(nr.ContainerDetail)
+	}
+
+	return []byte{}, nil
+}
+
+func (nr *NotificationRecord) SetLinkDetail(linkDetail []byte) error {
+	if len(linkDetail) == 0 {
+		return nil
+	}
+
+	switch nr.LinkType {
+	case NotificationLinkTypePipeline:
+		if err := json.Unmarshal(linkDetail, nr.PipelineDetail); err != nil {
+			return fmt.Errorf("LinkDetail for NotificationRecord %v of type %v is not of type PipelineLinkDetail: %w", nr.LinkID, nr.LinkType, err)
+		}
+	case NotificationLinkTypeContainer:
+		if err := json.Unmarshal(linkDetail, nr.ContainerDetail); err != nil {
+			return fmt.Errorf("LinkDetail for NotificationRecord %v of type %v is not of type ContainerLinkDetail: %w", nr.LinkID, nr.LinkType, err)
+		}
+	}
+
+	return nil
+}
+
+func (nr *NotificationRecord) GetGroups() ([]byte, error) {
+	return json.Marshal(nr.Groups)
+}
+
+func (nr *NotificationRecord) SetGroups(groups []byte) error {
+	if len(groups) == 0 {
+		return nil
+	}
+
+	if err := json.Unmarshal(groups, &nr.Groups); err != nil {
+		return fmt.Errorf("Groups for NotificationRecord %v of type %v is not of type []*Group: %w", nr.LinkID, nr.LinkType, err)
+	}
+
+	return nil
+}
+
+func (nr *NotificationRecord) GetOrganizations() ([]byte, error) {
+	return json.Marshal(nr.Organizations)
+}
+
+func (nr *NotificationRecord) SetOrganizations(organizations []byte) error {
+	if len(organizations) == 0 {
+		return nil
+	}
+
+	if err := json.Unmarshal(organizations, &nr.Organizations); err != nil {
+		return fmt.Errorf("Organizations for NotificationRecord %v of type %v is not of type []*Group: %w", nr.LinkID, nr.LinkType, err)
+	}
+
+	return nil
 }
