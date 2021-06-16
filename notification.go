@@ -96,6 +96,22 @@ func (nr *NotificationRecord) SetLinkDetail(linkDetail []byte) error {
 	return nil
 }
 
+func (nr *NotificationRecord) GetNotifications() ([]byte, error) {
+	return json.Marshal(nr.Notifications)
+}
+
+func (nr *NotificationRecord) SetNotifications(notifications []byte) error {
+	if len(notifications) == 0 {
+		return nil
+	}
+
+	if err := json.Unmarshal(notifications, &nr.Notifications); err != nil {
+		return fmt.Errorf("Notifications for NotificationRecord %v of type %v is not of type []Notification: %w", nr.LinkID, nr.LinkType, err)
+	}
+
+	return nil
+}
+
 func (nr *NotificationRecord) GetGroups() ([]byte, error) {
 	return json.Marshal(nr.Groups)
 }
