@@ -10,6 +10,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/estafette/estafette-ci-manifest v0.1.190 h1:y7fLX5mAcKtmphBHG10VwOQQvh1pX0KK7enQpQgDN+w=
 github.com/estafette/estafette-ci-manifest v0.1.190/go.mod h1:WASkc3SCW6ghRv6IimS7e2dUJljwn+5izBXt+ATxp2Q=
+github.com/estafette/estafette-ci-manifest v0.1.197 h1:hsHWzhydLNQptgl//5Jp630K10kHxTXDA0cfB4QVISM=
+github.com/estafette/estafette-ci-manifest v0.1.197/go.mod h1:WASkc3SCW6ghRv6IimS7e2dUJljwn+5izBXt+ATxp2Q=
 github.com/estafette/estafette-foundation v0.0.54 h1:EYiKInvQg0B4wtvb6gAvQuMOEvf7Y3Td2+Fx2/asxGU=
 github.com/estafette/estafette-foundation v0.0.54/go.mod h1:3tosAek4nyGDaWbi9dz2jSb2Wa4dAtLw/7c7mDWwaLA=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
