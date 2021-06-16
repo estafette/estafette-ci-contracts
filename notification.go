@@ -84,11 +84,11 @@ func (nr *NotificationRecord) SetLinkDetail(linkDetail []byte) error {
 
 	switch nr.LinkType {
 	case NotificationLinkTypePipeline:
-		if err := json.Unmarshal(linkDetail, nr.PipelineDetail); err != nil {
+		if err := json.Unmarshal(linkDetail, &nr.PipelineDetail); err != nil {
 			return fmt.Errorf("LinkDetail for NotificationRecord %v of type %v is not of type PipelineLinkDetail: %w", nr.LinkID, nr.LinkType, err)
 		}
 	case NotificationLinkTypeContainer:
-		if err := json.Unmarshal(linkDetail, nr.ContainerDetail); err != nil {
+		if err := json.Unmarshal(linkDetail, &nr.ContainerDetail); err != nil {
 			return fmt.Errorf("LinkDetail for NotificationRecord %v of type %v is not of type ContainerLinkDetail: %w", nr.LinkID, nr.LinkType, err)
 		}
 	}
