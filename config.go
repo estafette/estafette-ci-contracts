@@ -123,6 +123,7 @@ type TrustedImageConfig struct {
 	RunPrivileged           bool     `yaml:"runPrivileged" json:"runPrivileged"`
 	RunDocker               bool     `yaml:"runDocker" json:"runDocker"`
 	AllowCommands           bool     `yaml:"allowCommands" json:"allowCommands"`
+	AllowNotifications      bool     `yaml:"allowNotifications" json:"allowNotifications"`
 	InjectedCredentialTypes []string `yaml:"injectedCredentialTypes,omitempty" json:"injectedCredentialTypes,omitempty"`
 	AllowedPipelines        string   `yaml:"allowedPipelines,omitempty" json:"allowedPipelines,omitempty"`
 }
