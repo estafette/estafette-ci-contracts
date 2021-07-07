@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	manifest "github.com/estafette/estafette-ci-manifest"
 )
@@ -152,10 +153,11 @@ type VersionConfig struct {
 
 // CIServerConfig has a number of config items related to communication or linking to the CI server
 type CIServerConfig struct {
-	BaseURL          string `json:"baseUrl"`
-	BuilderEventsURL string `json:"builderEventsUrl"`
-	PostLogsURL      string `json:"postLogsUrl"`
-	JWT              string `json:"jwt"`
+	BaseURL          string    `json:"baseUrl"`
+	BuilderEventsURL string    `json:"builderEventsUrl"`
+	PostLogsURL      string    `json:"postLogsUrl"`
+	JWT              string    `json:"jwt"`
+	JWTExpiry        time.Time `json:"jwtExpiry"`
 }
 
 // DockerNetworkConfig has settings for creating a user defined docker network to make service containers accessible by name from other containers
